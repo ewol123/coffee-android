@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.x.coffeetime.application.ui.login.LoginFragment"
+        android:label="login_fragment"
+        tools:layout="@layout/login_fragment" >
+    <action android:id="@+id/to_menu" app:destination="@+id/menuFragment" />
+        <action
+            android:id="@+id/go_to_register"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"  />
+
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.example.x.coffeetime.application.ui.menu.MenuFragment"
+        android:label="menu_fragment"
+        tools:layout="@layout/menu_fragment" >
+
+        <action
+            android:id="@+id/to_login"
+            app:destination="@+id/loginFragment" />
+
+    </fragment>
+
+
+    <action
+        android:id="@+id/logout"
+        app:destination="@+id/loginFragment"
+        />
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.x.coffeetime.application.ui.register.RegisterFragment"
+        android:label="register_fragment"
+        tools:layout="@layout/register_fragment" >
+
+        <action
+            android:id="@+id/go_to_login"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"  />
+
+
+    </fragment>
+
+
+</navigation>

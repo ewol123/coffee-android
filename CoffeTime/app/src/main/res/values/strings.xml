@@ -1,0 +1,17 @@
+<resources>
+    <string name ="app_name">Café DeVille</string>
+    <string name="emailText">Email...</string>
+    <string name="passwordText">Password...</string>
+    <string name="continueText">Continue as a guest...</string>
+    <string name="sign_in_text">Sign in</string>
+    <string name="welcomeText">Welcome</string>
+    <string name="signupText">Create account</string>
+    <string name="signUpText">Sign up...</string>
+    <string name="shopping_cart">Shopping Cart</string>
+    <string name="logout">Logout</string>
+    <string name="home">Home</string>
+    <string name="app_logo">APP LOGO</string>
+    <string name="confirm_password">Confirm password...</string>
+    <string name="register">Register</string>
+    <string name="go_back">Go back</string>
+</resources>

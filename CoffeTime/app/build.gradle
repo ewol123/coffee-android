@@ -1,0 +1,121 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.x.coffeetime"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'com.android.support:support-v4:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // architecture components
+    implementation "android.arch.lifecycle:extensions:$archComponentsVersion"
+    implementation "android.arch.lifecycle:runtime:$archComponentsVersion"
+    kapt "android.arch.lifecycle:compiler:$archComponentsVersion"
+
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit-mock:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpLoggingInterceptorVersion"
+
+    // butterknife
+    implementation 'com.jakewharton:butterknife:9.0.0-rc1'
+    kapt 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
+
+    def room_version = "1.1.1"
+
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version" // use kapt for Kotlin
+
+    // optional - RxJava support for Room
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "android.arch.persistence.room:guava:$room_version"
+
+    // Test helpers
+    testImplementation "android.arch.persistence.room:testing:$room_version"
+
+
+    def paging_version = "1.0.0"
+
+    implementation "android.arch.paging:runtime:$paging_version"
+
+    // alternatively - without Android dependencies for testing
+    testImplementation "android.arch.paging:common:$paging_version"
+
+    // optional - RxJava support, currently in release candidate
+    implementation "android.arch.paging:rxjava2:1.0.0-rc1"
+
+    def nav_version = "1.0.0-alpha06"
+
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // use -ktx for Kotlin
+
+    // optional - Test helpers
+    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:$nav_version"
+    // use -ktx for Kotlin
+
+    def lifecycle_version = "1.1.1"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    // alternatively - just ViewModel
+    implementation "android.arch.lifecycle:viewmodel:$lifecycle_version" // use -ktx for Kotlin
+    // alternatively - just LiveData
+    implementation "android.arch.lifecycle:livedata:$lifecycle_version"
+    // alternatively - Lifecycles only (no ViewModel or LiveData).
+    //     Support library depends on this lightweight import
+    implementation "android.arch.lifecycle:runtime:$lifecycle_version"
+
+    kapt "android.arch.lifecycle:compiler:$lifecycle_version" // use kapt for Kotlin
+    // alternately - if using Java8, use the following instead of compiler
+    implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
+
+    // optional - ReactiveStreams support for LiveData
+    implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
+
+    // optional - Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:$lifecycle_version"
+
+    //coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.2'
+
+   //validation
+    implementation "com.wajahatkarim3.easyvalidation:easyvalidation-core:1.0.1"
+}
