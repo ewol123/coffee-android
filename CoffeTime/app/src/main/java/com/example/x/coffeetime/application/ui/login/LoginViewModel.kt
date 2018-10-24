@@ -7,7 +7,7 @@ import android.content.Context
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.data.LoginRepository
-import com.example.x.coffeetime.application.db.appDatabase
+import com.example.x.coffeetime.application.db.AppDatabase
 import com.example.x.coffeetime.application.model.Token
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -21,7 +21,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         val token: LiveData<List<Token>>
 
         init {
-            val tokenDao = appDatabase.getInstance(application).tokenDao()
+            val tokenDao = AppDatabase.getInstance(application).tokenDao()
             mainService = MainService.create()
             apiService =  ApiService()
             executor = Executors.newSingleThreadExecutor()
@@ -30,9 +30,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         }
 
 
-        fun login(username: String, password: String, context: Context?)  {
+        fun login(username: String, password: String, context: Context?, onSuccess: (success: String) -> Unit,
+                  onError: (error: String) -> Unit)  {
 
-            repository.login(username,password, context)
+            repository.login(username,password, context, {success -> onSuccess(success) } , { error -> onError(error)  })
         }
 
         fun delete() {

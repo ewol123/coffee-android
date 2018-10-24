@@ -1,34 +1,30 @@
-package com.example.x.coffeetime.application.ui.menu
+package com.example.x.coffeetime.application.ui.product
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.*
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.data.LoginRepository
-import com.example.x.coffeetime.application.db.appDatabase
+import com.example.x.coffeetime.application.db.AppDatabase
 import com.example.x.coffeetime.application.model.Token
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class MenuViewModel(application: Application) : AndroidViewModel(application) {
+class ProductViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository: LoginRepository
-    private val ApiService: ApiService
+    private val apiService: ApiService
     private val mainService: MainService
     private val executor: Executor
     val token: LiveData<List<Token>>
-
-
     init {
-        val tokenDao = appDatabase.getInstance(application).tokenDao()
+        val tokenDao = AppDatabase.getInstance(application).tokenDao()
         mainService = MainService.create()
-        ApiService =  ApiService()
+        apiService =  ApiService()
         executor = Executors.newSingleThreadExecutor()
-        repository = LoginRepository(ApiService, mainService ,tokenDao,executor)
+        repository = LoginRepository(apiService, mainService ,tokenDao,executor)
         token = repository.token
     }
-
 
 
 

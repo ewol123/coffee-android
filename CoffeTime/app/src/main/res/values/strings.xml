@@ -9,9 +9,18 @@
     <string name="signUpText">Sign up...</string>
     <string name="shopping_cart">Shopping Cart</string>
     <string name="logout">Logout</string>
+    <string name="loading">Loading</string>
     <string name="home">Home</string>
     <string name="app_logo">APP LOGO</string>
     <string name="confirm_password">Confirm password...</string>
     <string name="register">Register</string>
     <string name="go_back">Go back</string>
+    <string name="search">Search...</string>
+    <string name="no_result">No result</string>
+    <string name="test_text">Americano</string>
+    <string name="text_price">5$/ea</string>
+    <string name="scan_text">Please scan your table number</string>
+    <string name="scan_table">Scan your table number</string>
+    <string name="preference_file_key">barcode</string>
+    <string name="your_table_test">table: 1</string>
 </resources>

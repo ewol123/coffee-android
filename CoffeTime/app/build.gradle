@@ -116,6 +116,18 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.30.2'
 
-   //validation
+    //validation
     implementation "com.wajahatkarim3.easyvalidation:easyvalidation-core:1.0.1"
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //picasso transformations
+
+    implementation 'jp.wasabeef:picasso-transformations:2.2.1'
+    // If you want to use the GPU Filters
+    implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+
+    // barcode scanner
+    implementation 'com.github.bobekos:SimpleBarcodeScanner:1.0.19'
 }

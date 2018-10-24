@@ -28,6 +28,8 @@ import android.support.v4.app.ActivityCompat.requestPermissions
 import android.Manifest.permission
 import android.Manifest.permission.READ_CONTACTS
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context
+import android.support.v4.app.ActivityCompat
 import butterknife.ButterKnife
 
 
@@ -52,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         ButterKnife.bind(this)
 
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        sharedPref?.edit()?.clear()?.apply()
 
         setSupportActionBar(toolbar)
 
@@ -60,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 .findFragmentById(R.id.my_nav_host_fragment) as NavHostFragment? ?: return
 
         val navController = host.navController
+
 
         setupActionBar(navController)
 
@@ -71,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Resources.NotFoundException) {
                 Integer.toString(destination.id)
             }
-
+            Log.d("DESTINATIONLABEL", destination.label.toString())
             when (destination.label) {
                 "menu_fragment" -> {
                     toolbar?.title = "Menu"
@@ -84,6 +89,9 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
                 }
+                "barcode_fragment" -> {
+                    toolbar?.title ="Scan table"
+                }
 
             }
 
@@ -93,6 +101,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+
 
     private fun setupNavigationMenu(navController: NavController) {
         navigationView?. let { navigationView ->
@@ -139,7 +149,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
-
+    override fun onDestroy() {
+        Log.d("onDestroy","DESTROYED")
+        super.onDestroy()
+    }
 }

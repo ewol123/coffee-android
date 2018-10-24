@@ -5,7 +5,7 @@ import com.wajahatkarim3.easyvalidation.core.rules.BaseRule
 import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validEmail
 import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
-import kotlinx.android.synthetic.main.menu_fragment.view.*
+import kotlinx.android.synthetic.main.product_fragment.view.*
 
 class Validator(){
 

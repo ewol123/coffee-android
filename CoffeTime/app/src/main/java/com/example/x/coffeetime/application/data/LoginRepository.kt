@@ -27,19 +27,21 @@ class LoginRepository(
         }
     }
 
-     fun login(username: String,password : String, context: Context?) {
+     fun login(username: String,password : String, context: Context?,  onSuccess: (success: String) -> Unit,
+               onError: (error: String) -> Unit) {
         Log.d("LoginRepository", "New login")
 
         ApiService.requestAuth( mainService, username, password, { token ->
             ioExecutor.execute {
             tokenDao.deleteAll()
             var newToken = Token(token)
-
             tokenDao.insert(newToken)
             }
+            onSuccess("success")
         }, { error ->
             Log.d("error","not inserted, $error")
             Toast.makeText(context,error,Toast.LENGTH_SHORT).show()
+            onError("error")
         })
 
     }

@@ -19,19 +19,26 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"  />
 
-
     </fragment>
 
 
     <fragment
         android:id="@+id/menuFragment"
-        android:name="com.example.x.coffeetime.application.ui.menu.MenuFragment"
+        android:name="com.example.x.coffeetime.application.ui.product.ProductFragment"
         android:label="menu_fragment"
-        tools:layout="@layout/menu_fragment" >
+        tools:layout="@layout/product_fragment" >
 
         <action
             android:id="@+id/to_login"
             app:destination="@+id/loginFragment" />
+
+        <action
+            android:id="@+id/go_to_camera"
+            app:destination="@id/barcodeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"  />
 
     </fragment>
 
@@ -55,6 +62,15 @@
             app:popExitAnim="@anim/slide_out_left"  />
 
 
+    </fragment>
+    <fragment
+        android:id="@+id/barcodeFragment"
+        android:name="com.example.x.coffeetime.application.ui.BarcodeFragment"
+        android:label="barcode_fragment"
+        tools:layout="@layout/barcode_fragment" >
+        <action
+            android:id="@+id/action_barcode_to_menu"
+            app:destination="@id/menuFragment" />
     </fragment>
 
 

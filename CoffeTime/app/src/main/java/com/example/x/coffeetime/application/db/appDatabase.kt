@@ -5,28 +5,27 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import com.example.x.coffeetime.application.model.Coffee
 import com.example.x.coffeetime.application.model.Token
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.launch
+import java.util.concurrent.Executors
 
 @Database(
-        entities = [Token::class],
+        entities = [Token::class, Coffee::class],
         version = 1,
         exportSchema = false
 )
-abstract class appDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun tokenDao(): TokenDao
+    abstract fun coffeeDao(): CoffeeDao
 
     companion object {
 
         @Volatile
-        private var INSTANCE: appDatabase? = null
+        private var INSTANCE: AppDatabase? = null
 
         fun getInstance(context: Context
-        ): appDatabase =
+        ): AppDatabase =
                 INSTANCE ?: synchronized(this) {
                     INSTANCE
                             ?: buildDatabase(context).also { INSTANCE = it }
@@ -34,14 +33,35 @@ abstract class appDatabase : RoomDatabase() {
 
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
-                        appDatabase::class.java, "coffee_app")
+                        AppDatabase::class.java, "coffee_app")
+                        .addCallback(DatabaseCallback())
                         .build()
 
 
 
+        private class DatabaseCallback(
+
+        ) : RoomDatabase.Callback() {
+            /**
+             * Override the onOpen method to populate the database.
+             * For this sample, we clear the database every time it is created or opened.
+             */
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+                // If you want to keep the data through app restarts,
+                // comment out the following line.
+                INSTANCE?.let { database ->
+                    Executors.newSingleThreadExecutor().execute {
+                        database.coffeeDao().delete()
+                     }
+                    }
+                }
+
+
+
+            }
+        }
 
 
 
     }
-
-}
