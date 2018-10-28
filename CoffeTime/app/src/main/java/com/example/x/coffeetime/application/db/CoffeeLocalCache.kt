@@ -1,5 +1,6 @@
 package com.example.x.coffeetime.application.db
 
+import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
 import android.util.Log
 import com.example.x.coffeetime.application.model.Coffee
@@ -26,14 +27,20 @@ class CoffeeLocalCache(
         }
     }
 
+    fun delete(deleteFinished: () ->Unit){
+        ioExecutor.execute {
+            coffeeDao.delete()
+            deleteFinished()
+        }
+    }
+
     fun coffeesByName(name: String): DataSource.Factory<Int,Coffee> {
         // appending '%' so we can allow other characters to be before and after the query string
         val query = "%${name.replace(' ', '%')}%"
         return coffeeDao.coffeesByName(query)
     }
 
-    fun coffeesById(id: Int) : List<Coffee> {
-
+    fun coffeesById(id: Int): LiveData<List<Coffee>>  {
         return coffeeDao.coffeesById(id)
     }
 

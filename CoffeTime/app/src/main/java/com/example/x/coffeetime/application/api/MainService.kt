@@ -162,7 +162,7 @@ interface MainService {
                     @Query("query") query: String): Call<List<Coffee>>
 
     companion object {
-        private const val BASE_URL ="http://192.168.1.104:5819"
+        private const val BASE_URL ="http://192.168.1.100:5819"
 
 
         fun create(): MainService {

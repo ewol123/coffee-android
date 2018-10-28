@@ -35,10 +35,6 @@ class SearchProductViewModel(private val repository: CoffeeRepository) : ViewMod
         repository.search(it)
     })
 
-    fun coffeeById(id: Int) : List<Coffee> {
-        return repository.coffeeById(id)
-    }
-
     val coffees: LiveData<PagedList<Coffee>> = Transformations.switchMap(coffeeResult,
             { it -> it.data })
     val networkErrors: LiveData<String> = Transformations.switchMap(coffeeResult,

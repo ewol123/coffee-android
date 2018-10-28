@@ -71,6 +71,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_menu_to_SingleItem">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="go_to_camera">
                               <value>
                                 <LayoutPositions />
@@ -82,6 +87,18 @@
                               </value>
                             </entry>
                           </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="productSingleItem">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-134" />
+                            <option name="y" value="-258" />
+                          </Point>
                         </option>
                       </LayoutPositions>
                     </value>

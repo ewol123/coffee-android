@@ -10,7 +10,9 @@ import com.example.x.coffeetime.application.model.Coffee
 /**
  * Adapter for the list of repositories.
  */
-class CoffeesAdapter : PagedListAdapter<Coffee, RecyclerView.ViewHolder>(COFFEE_COMPARATOR) {
+class CoffeesAdapter(val listener: (Coffee) -> Unit) : PagedListAdapter<Coffee, RecyclerView.ViewHolder>(COFFEE_COMPARATOR) {
+
+    var onItemClick: ((Coffee) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return CoffeeViewHolder.create(parent)
@@ -20,6 +22,12 @@ class CoffeesAdapter : PagedListAdapter<Coffee, RecyclerView.ViewHolder>(COFFEE_
         val coffeeItem = getItem(position)
         if (coffeeItem != null) {
             (holder as CoffeeViewHolder).bind(coffeeItem)
+
+            holder.itemView.setOnClickListener {
+                listener(coffeeItem)
+            }
+
+
         }
     }
 

@@ -40,6 +40,14 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"  />
 
+        <action
+            android:id="@+id/action_menu_to_SingleItem"
+            app:destination="@id/productSingleItem"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
     </fragment>
 
 
@@ -65,12 +73,21 @@
     </fragment>
     <fragment
         android:id="@+id/barcodeFragment"
-        android:name="com.example.x.coffeetime.application.ui.BarcodeFragment"
+        android:name="com.example.x.coffeetime.application.ui.barcode.BarcodeFragment"
         android:label="barcode_fragment"
         tools:layout="@layout/barcode_fragment" >
         <action
             android:id="@+id/action_barcode_to_menu"
             app:destination="@id/menuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productSingleItem"
+        android:name="com.example.x.coffeetime.application.ui.product.SingleProduct.ProductSingleItem"
+        android:label="ProductSingleItem" >
+        <argument
+            android:name="id"
+            android:defaultValue="0"
+             />
     </fragment>
 
 

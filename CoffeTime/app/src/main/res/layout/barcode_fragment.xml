@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".application.ui.BarcodeFragment">
+    tools:context=".application.ui.barcode.BarcodeFragment">
 
     <com.bobekos.bobek.scanner.BarcodeView
         android:id="@+id/barcodeView"

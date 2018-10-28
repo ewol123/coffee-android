@@ -1,4 +1,4 @@
-package com.example.x.coffeetime.application.ui
+package com.example.x.coffeetime.application.ui.barcode
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel

@@ -1,5 +1,7 @@
 package com.example.x.coffeetime.application.ui.product
 
+import android.app.ActionBar
+import android.content.Context
 import android.support.design.shape.RoundedCornerTreatment
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import butterknife.BindView
 import com.example.x.coffeetime.R
@@ -29,24 +32,10 @@ class CoffeeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val name: TextView = view.findViewById(R.id.coffee_name)
     private val image: ImageView = view.findViewById(R.id.coffee_image)
     private val price: TextView = view.findViewById(R.id.coffee_price)
-    private val addProduct: FloatingActionButton = view.findViewById(R.id.fabAddProduct)
-
     private var coffee: Coffee? = null
 
     init {
         ButterKnife.bind(view)
-        view.setOnClickListener {
-            coffee?.name?.let { name ->
-               Log.d("ADAPTER:","clicked item in adapter")
-            }
-        }
-
-        view.fabAddProduct.setOnClickListener {
-            coffee?.coffeeId.let { id ->
-                Log.d("ADAPTER BUTTON","clicked item in adapter $id ")
-            }
-        }
-
     }
 
     fun bind(coffee: Coffee?) {
@@ -56,11 +45,11 @@ class CoffeeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             image.visibility = View.GONE
             price.text = resources.getString(R.string.loading)
         } else {
-            showCoffeeData(coffee)
+            showCoffeeData(coffee, itemView.context)
         }
     }
 
-    private fun showCoffeeData(coffee: Coffee) {
+    private fun showCoffeeData(coffee: Coffee, context: Context) {
         this.coffee = coffee
         name.text = coffee.name
         price.text = "$" + coffee.price + "/ea"
@@ -68,6 +57,7 @@ class CoffeeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 .load(coffee.imagePath)
                 .transform(RoundedCornersTransformation(20,5))
                 .resize(150,150).into(image)
+
 
     }
 

@@ -10,5 +10,7 @@ data class Coffee(
         @field:SerializedName("name") val name: String,
         @field:SerializedName("imagePath") val imagePath: String,
         @field:SerializedName("price") val price: String,
-        @field:SerializedName("description") val description: String
+        @field:SerializedName("description") val description: String,
+        @field:SerializedName("strength") val strength: Int
+
 )

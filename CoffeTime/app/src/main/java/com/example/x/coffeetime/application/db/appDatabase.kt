@@ -11,7 +11,7 @@ import java.util.concurrent.Executors
 
 @Database(
         entities = [Token::class, Coffee::class],
-        version = 1,
+        version = 2,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -35,6 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                 Room.databaseBuilder(context.applicationContext,
                         AppDatabase::class.java, "coffee_app")
                         .addCallback(DatabaseCallback())
+                        .fallbackToDestructiveMigration()
                         .build()
 
 

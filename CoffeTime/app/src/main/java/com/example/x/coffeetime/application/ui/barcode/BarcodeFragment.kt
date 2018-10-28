@@ -1,4 +1,4 @@
-package com.example.x.coffeetime.application.ui
+package com.example.x.coffeetime.application.ui.barcode
 
 import android.Manifest
 import android.arch.lifecycle.ViewModelProviders
@@ -16,7 +16,6 @@ import io.reactivex.disposables.Disposable
 import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
-import com.bobekos.bobek.scanner.R.attr.setBeepSound
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.barcode_fragment.*
 

@@ -19,8 +19,11 @@ import kotlinx.android.synthetic.main.product_fragment.*
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import butterknife.BindView
 import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.product_item.*
 
 
 class ProductFragment : Fragment() {
@@ -28,7 +31,14 @@ class ProductFragment : Fragment() {
 
     private lateinit var viewModel: ProductViewModel
     private lateinit var productViewModel: SearchProductViewModel
-    private val adapter = CoffeesAdapter()
+    private val adapter = CoffeesAdapter{ data ->
+        Log.i("Coffee:", "${data.coffeeId} clicked")
+
+
+        val bundle = Bundle()
+        bundle.putInt("id", data.coffeeId)
+        findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +59,13 @@ class ProductFragment : Fragment() {
         viewModel.token.observe(this, Observer { token ->
             if(token!!.isEmpty()){
 
+
+
                findNavController().navigate(R.id.to_login,null)
 
 
             } else if(token?.isNotEmpty()) {
+
                 Log.d("ez a token", token.get(0).token)
 
                 val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
@@ -65,12 +78,14 @@ class ProductFragment : Fragment() {
                     emptyList?.visibility = View.VISIBLE
                     list?.visibility = View.VISIBLE
                     input_layout?.visibility = View.VISIBLE
-                    tableText?.text = "table: $barcode"
+                    tableText?.text = barcode
                     bottomBar?.visibility = View.VISIBLE
-                    initAdapter()
-                    val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
+
+                    val query = productViewModel.lastQueryValue() ?: DEFAULT_QUERY
                     productViewModel.searchCoffee(query)
-                    initSearch(query)
+                    initAdapter()
+                    initSearch()
+
                 }
             }
         })
@@ -83,11 +98,6 @@ class ProductFragment : Fragment() {
 
             findNavController().navigate(R.id.go_to_camera,null)
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(LAST_SEARCH_QUERY, productViewModel.lastQueryValue())
     }
 
     private fun initAdapter() {
@@ -104,8 +114,8 @@ class ProductFragment : Fragment() {
         })
     }
 
-    private fun initSearch(query: String) {
-        search_coffee.setText(query)
+    private fun initSearch() {
+        search_coffee.setText(productViewModel.lastQueryValue())
 
         search_coffee.setOnEditorActionListener{ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
@@ -128,9 +138,9 @@ class ProductFragment : Fragment() {
     private fun updateCoffeeListFromInput() {
         search_coffee.text.trim().let {
 
-                list.scrollToPosition(0)
-                productViewModel.searchCoffee(it.toString())
-                adapter.submitList(null)
+            list.scrollToPosition(0)
+            productViewModel.searchCoffee(it.toString())
+            adapter.submitList(null)
 
         }
     }
@@ -151,11 +161,13 @@ class ProductFragment : Fragment() {
 
     companion object {
         private const val LAST_SEARCH_QUERY: String = "last_search_query"
-        private const val DEFAULT_QUERY = "Americano"
+        private const val DEFAULT_QUERY = ""
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.main_menu, menu)
     }
+
+
 
 }

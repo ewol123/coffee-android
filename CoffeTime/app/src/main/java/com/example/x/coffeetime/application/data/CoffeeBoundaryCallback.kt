@@ -3,6 +3,7 @@ package com.example.x.coffeetime.application.data
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList
+import android.util.Log
 import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.api.BindingModel.PaginationModel
 import com.example.x.coffeetime.application.api.MainService
@@ -16,6 +17,10 @@ class CoffeeBoundaryCallback(
         private val cache: CoffeeLocalCache
 ) : PagedList.BoundaryCallback<Coffee>() {
 
+
+
+
+
     private var lastRequestedPage = 1
     val apiService = ApiService()
     private val _networkErrors = MutableLiveData<String>()
@@ -28,12 +33,16 @@ class CoffeeBoundaryCallback(
 
 
     override fun onZeroItemsLoaded() {
+        Log.d("onZeroItemsLoaded", "onZeroItemsLoaded")
         requestAndSaveData(query)
     }
 
     override fun onItemAtEndLoaded(itemAtEnd: Coffee) {
+        Log.d("onItemAtEndLoaded", itemAtEnd.toString())
         requestAndSaveData(query)
     }
+
+
 
     private fun requestAndSaveData(query: String) {
         if (isRequestInProgress) return
@@ -43,7 +52,7 @@ class CoffeeBoundaryCallback(
             cache.insert(coffees, {
                 lastRequestedPage++
                 isRequestInProgress = false
-            })
+             })
         }, { error ->
             _networkErrors.postValue(error)
             isRequestInProgress = false

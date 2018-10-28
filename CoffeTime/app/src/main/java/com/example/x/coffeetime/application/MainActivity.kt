@@ -92,6 +92,9 @@ class MainActivity : AppCompatActivity() {
                 "barcode_fragment" -> {
                     toolbar?.title ="Scan table"
                 }
+                "ProductSingleItem" ->{
+                    toolbar?.title="Details"
+                }
 
             }
 
