@@ -95,6 +95,9 @@ class MainActivity : AppCompatActivity() {
                 "ProductSingleItem" ->{
                     toolbar?.title="Details"
                 }
+                "reset_pass_fragment" ->{
+                    toolbar?.title="Reset password"
+                }
 
             }
 

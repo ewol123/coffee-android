@@ -25,8 +25,6 @@ private const val CLIENT_ID = "5bd1d38ccf7a428ab3b963ac8bd1e4de"
 
 class ApiService {
 
-
-
 fun requestAuth(
         service: MainService,
         username: String,
@@ -132,6 +130,56 @@ fun register(
         )
     }
 
+    fun sendPasswordReset(
+            service: MainService,
+            email: String,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit) {
+
+        service.sendPasswordReset(email).enqueue(
+                object : Callback<Void> {
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        onError(t.message?: "unknown error")
+                    }
+
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+
+                        if(response.isSuccessful){
+                            onSuccess("Token sent")
+                        }
+                        else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+    fun provideToken(
+            service: MainService,
+            token: String,
+            email: String,
+            newPass: String,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit) {
+
+        service.provideToken(token,email,newPass).enqueue(
+                object : Callback<String> {
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        onError(t.message?: "unknown error")
+                    }
+
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if(response.isSuccessful){
+                            onSuccess(response.body() ?:"Password changed")
+                        }
+                        else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
 
 }
 
@@ -161,8 +209,21 @@ interface MainService {
                     @Query("itemsPerPage") itemsPerPage: Int,
                     @Query("query") query: String): Call<List<Coffee>>
 
+
+    @GET("api/accounts/sendpasswordreset")
+    fun sendPasswordReset(
+            @Query("email") email: String
+    ): Call<Void>
+
+    @GET("api/accounts/providetoken")
+    fun provideToken(
+            @Query("token") token: String,
+            @Query("email") email: String,
+            @Query("newPass") newPass: String
+    ): Call<String>
+
     companion object {
-        private const val BASE_URL ="http://192.168.1.100:5819"
+        private const val BASE_URL ="http://192.168.1.108:5819"
 
 
         fun create(): MainService {

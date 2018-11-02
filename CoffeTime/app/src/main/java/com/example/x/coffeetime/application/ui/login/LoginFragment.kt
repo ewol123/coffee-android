@@ -1,12 +1,9 @@
 package com.example.x.coffeetime.application.ui.login
 
-import android.app.AlertDialog
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,29 +13,10 @@ import androidx.navigation.fragment.findNavController
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.x.coffeetime.R
-import com.example.x.coffeetime.application.ui.product.ProductFragment
+import kotlinx.android.synthetic.main.login_fragment.*
 
 class LoginFragment : Fragment() {
 
-    @JvmField
-    @BindView(R.id.loginButton)
-    var loginButton: Button? = null
-
-    @JvmField
-    @BindView(R.id.loginEmail)
-    var loginEmail: EditText? = null
-
-    @JvmField
-    @BindView(R.id.loginPassword)
-    var loginPassword: EditText? = null
-
-    @JvmField
-    @BindView(R.id.sign_up_text)
-    var signUpText: TextView? = null
-
-    @JvmField
-    @BindView(R.id.loginProgressBar)
-    var loginProgressBar: ProgressBar? = null
 
     private lateinit var viewModel: LoginViewModel
 
@@ -74,8 +52,12 @@ class LoginFragment : Fragment() {
              })
         })
 
-        signUpText?.setOnClickListener {
-            findNavController().navigate(R.id.go_to_register)
+        sign_up_text?.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_Register)
+        }
+
+        resetPass?.setOnClickListener {
+            findNavController().navigate(R.id.action_login_to_resetPass)
         }
 
     }

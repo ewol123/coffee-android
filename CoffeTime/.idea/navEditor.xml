@@ -40,7 +40,12 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="go_to_register">
+                            <entry key="action_login_to_Register">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_login_to_resetPass">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -71,17 +76,17 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_menu_to_Camera">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_menu_to_SingleItem">
                               <value>
                                 <LayoutPositions />
                               </value>
                             </entry>
-                            <entry key="go_to_camera">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="to_login">
+                            <entry key="action_menu_to_login">
                               <value>
                                 <LayoutPositions />
                               </value>
@@ -114,7 +119,28 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="go_to_login">
+                            <entry key="action_register_to_Login">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="resetPassFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="114" />
+                            <option name="y" value="-304" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_resetPass_to_login">
                               <value>
                                 <LayoutPositions />
                               </value>

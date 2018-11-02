@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.barcode_fragment.*
 class BarcodeFragment : Fragment() {
 
     private var mDisposable: Disposable? = null
-    private val CAMERA_REQUEST_CODE = 100
 
     companion object {
         fun newInstance() = BarcodeFragment()
@@ -44,30 +43,10 @@ class BarcodeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
+        scanBarcode()
         //make sure to request camera permission before the subscription
-        setupPermissions()
-
     }
 
-    private fun setupPermissions() {
-        val permission = ActivityCompat.checkSelfPermission(context!!,
-                Manifest.permission.CAMERA)
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            Log.i("permission", "Permission to record denied")
-            makeRequest()
-        }
-        else {
-            scanBarcode()
-        }
-    }
-
-    private fun makeRequest() {
-        requestPermissions(
-                arrayOf(Manifest.permission.CAMERA),
-                CAMERA_REQUEST_CODE)
-    }
 
 
 
@@ -97,21 +76,6 @@ class BarcodeFragment : Fragment() {
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when (requestCode) {
-            CAMERA_REQUEST_CODE -> {
-
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
-                    Log.i("permission", "Permission has been denied by user")
-                    findNavController().navigate(R.id.action_barcode_to_menu,null)
-                } else {
-                    Log.i("permission", "Permission has been granted by user")
-                    scanBarcode()
-                }
-            }
-        }
-    }
 
     override fun onStop() {
         super.onStop()

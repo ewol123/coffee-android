@@ -1,10 +1,13 @@
 package com.example.x.coffeetime.application.ui.product
 
+import android.Manifest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.*
@@ -17,18 +20,11 @@ import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.model.Coffee
 import kotlinx.android.synthetic.main.product_fragment.*
 import android.support.v7.widget.LinearLayoutManager
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import butterknife.BindView
-import butterknife.ButterKnife
-import kotlinx.android.synthetic.main.product_item.*
 
 
 class ProductFragment : Fragment() {
 
-
+    private val CAMERA_REQUEST_CODE = 100
     private lateinit var viewModel: ProductViewModel
     private lateinit var productViewModel: SearchProductViewModel
     private val adapter = CoffeesAdapter{ data ->
@@ -61,7 +57,7 @@ class ProductFragment : Fragment() {
 
 
 
-               findNavController().navigate(R.id.to_login,null)
+               findNavController().navigate(R.id.action_menu_to_login,null)
 
 
             } else if(token?.isNotEmpty()) {
@@ -91,12 +87,11 @@ class ProductFragment : Fragment() {
         })
 
         scanButton?.setOnClickListener {
-            findNavController().navigate(R.id.go_to_camera,null)
+         setupPermissions()
         }
 
         rescanButton?.setOnClickListener {
-
-            findNavController().navigate(R.id.go_to_camera,null)
+            setupPermissions()
         }
     }
 
@@ -156,8 +151,41 @@ class ProductFragment : Fragment() {
     }
 
 
+    private fun setupPermissions() {
+        val permission = ActivityCompat.checkSelfPermission(context!!,
+                Manifest.permission.CAMERA)
 
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            Log.i("permission", "Permission to record denied")
+            makeRequest()
+        }
+        else {
+            findNavController().navigate(R.id.action_menu_to_Camera)
+        }
+    }
 
+    private fun makeRequest() {
+        requestPermissions(
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_REQUEST_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            CAMERA_REQUEST_CODE -> {
+
+                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+
+                    Log.i("permission", "Permission has been denied by user")
+                    Toast.makeText(context,"You can't use the app without camera permission, sorry :(", Toast.LENGTH_SHORT)
+                            .show()
+                } else {
+                    Log.i("permission", "Permission has been granted by user")
+                    findNavController().navigate(R.id.action_menu_to_Camera)
+                }
+            }
+        }
+    }
 
     companion object {
         private const val LAST_SEARCH_QUERY: String = "last_search_query"

@@ -54,6 +54,7 @@ abstract class AppDatabase : RoomDatabase() {
                 INSTANCE?.let { database ->
                     Executors.newSingleThreadExecutor().execute {
                         database.coffeeDao().delete()
+                        database.tokenDao().deleteAll()
                      }
                     }
                 }

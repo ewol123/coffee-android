@@ -12,12 +12,21 @@
         tools:layout="@layout/login_fragment" >
     <action android:id="@+id/to_menu" app:destination="@+id/menuFragment" />
         <action
-            android:id="@+id/go_to_register"
+            android:id="@+id/action_login_to_Register"
             app:destination="@id/registerFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"  />
+
+        <action
+            android:id="@+id/action_login_to_resetPass"
+            app:destination="@id/resetPassFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            />
 
     </fragment>
 
@@ -29,11 +38,11 @@
         tools:layout="@layout/product_fragment" >
 
         <action
-            android:id="@+id/to_login"
+            android:id="@+id/action_menu_to_login"
             app:destination="@+id/loginFragment" />
 
         <action
-            android:id="@+id/go_to_camera"
+            android:id="@+id/action_menu_to_Camera"
             app:destination="@id/barcodeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -62,7 +71,7 @@
         tools:layout="@layout/register_fragment" >
 
         <action
-            android:id="@+id/go_to_login"
+            android:id="@+id/action_register_to_Login"
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
@@ -88,6 +97,21 @@
             android:name="id"
             android:defaultValue="0"
              />
+    </fragment>
+    <fragment
+        android:id="@+id/resetPassFragment"
+        android:name="com.example.x.coffeetime.application.ui.reset_password.ResetPassFragment"
+        android:label="reset_pass_fragment"
+        tools:layout="@layout/reset_pass_fragment">
+
+        <action
+            android:id="@+id/action_resetPass_to_login"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"  />
+
     </fragment>
 
 
