@@ -39,4 +39,9 @@
     <string name="code">Code...</string>
     <string name="change_password">change password</string>
     <string name="back_to_login">Back to login</string>
+    <string name="cart_subtotal">Cart subtotal</string>
+    <string name="includes_taxes_and_discounts">Includes taxes, and discounts</string>
+    <string name="cart_price_test">$17.98</string>
+    <string name="proceed_checkout">Proceed to checkout</string>
+    <string name="view_cart">VIEW CART</string>
 </resources>

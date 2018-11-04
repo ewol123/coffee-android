@@ -57,6 +57,7 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
 
+
     </fragment>
 
 
@@ -64,6 +65,16 @@
         android:id="@+id/logout"
         app:destination="@+id/loginFragment"
         />
+
+    <action
+        android:id="@+id/cart"
+        app:destination="@+id/cartFragment"
+        app:enterAnim="@anim/slide_in_left"
+        app:exitAnim="@anim/slide_out_right"
+        app:popEnterAnim="@anim/slide_in_right"
+        app:popExitAnim="@anim/slide_out_left"/>
+
+
     <fragment
         android:id="@+id/registerFragment"
         android:name="com.example.x.coffeetime.application.ui.register.RegisterFragment"
@@ -111,6 +122,14 @@
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left"  />
+
+    </fragment>
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.example.x.coffeetime.application.ui.cart.CartFragment"
+        android:label="cart_fragment"
+        tools:layout="@layout/cart_fragment" >
+
 
     </fragment>
 
