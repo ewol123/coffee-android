@@ -34,12 +34,9 @@ class CoffeeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val price: TextView = view.findViewById(R.id.coffee_price)
     private var coffee: Coffee? = null
 
-    init {
-        ButterKnife.bind(view)
-    }
-
     fun bind(coffee: Coffee?) {
         if (coffee == null) {
+
             val resources = itemView.resources
             name.text = resources.getString(R.string.loading)
             image.visibility = View.GONE

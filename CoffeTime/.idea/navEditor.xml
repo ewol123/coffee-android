@@ -29,6 +29,11 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="cart">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="cartFragment">
                     <value>
                       <LayoutPositions>
@@ -94,11 +99,6 @@
                               </value>
                             </entry>
                             <entry key="action_menu_to_SingleItem">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                            <entry key="action_menu_to_cart">
                               <value>
                                 <LayoutPositions />
                               </value>

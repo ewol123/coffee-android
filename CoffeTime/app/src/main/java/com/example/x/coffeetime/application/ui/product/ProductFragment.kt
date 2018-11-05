@@ -20,6 +20,7 @@ import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.model.Coffee
 import kotlinx.android.synthetic.main.product_fragment.*
 import android.support.v7.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.product_item.view.*
 
 
 class ProductFragment : Fragment() {
@@ -27,21 +28,22 @@ class ProductFragment : Fragment() {
     private val CAMERA_REQUEST_CODE = 100
     private lateinit var viewModel: ProductViewModel
     private lateinit var productViewModel: SearchProductViewModel
-    private val adapter = CoffeesAdapter{ data ->
-        Log.i("Coffee:", "${data.coffeeId} clicked")
+    private val adapter = CoffeesAdapter({coffee ->
+            Log.i("Coffee:", "${coffee.coffeeId} clicked")
 
+            val bundle = Bundle()
+            bundle.putInt("id", coffee.coffeeId)
+            findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
 
-        val bundle = Bundle()
-        bundle.putInt("id", data.coffeeId)
-        findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
-    }
+    }, {Int ->
+        Log.i("Add product", Int.toString())
+    })
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.product_fragment, container, false)
-
 
     }
 
