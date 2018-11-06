@@ -45,8 +45,7 @@ class LoginRepository(
         })
 
     }
-
-    val token: LiveData<List<Token>> = tokenDao.getToken()
+     val token: LiveData<List<Token>> = tokenDao.getToken()
 
 
 

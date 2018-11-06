@@ -14,10 +14,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import android.R.id.edit
+import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-
-
+import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.model.Cart
 
 
 private const val TAG = "MainService"
@@ -120,8 +121,39 @@ fun register(
                         Log.d(TAG, "got a response $response")
                         if (response.isSuccessful) {
                             val coffees = response.body() ?: emptyList()
-                            Log.d("repos",coffees.toString())
+                            Log.d("coffees",coffees.toString())
                             onSuccess(coffees)
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+    fun findOrders(
+            service: MainService,
+            onSuccess: (orders: List<Cart>) -> Unit,
+            onError: (error: String) -> Unit) {
+
+       var token = Injection.provideLoginRepository().token.value?.get(0)?.token  ?: "no token"
+
+        service.findOrders(token).enqueue(
+                object : Callback<List<Cart>> {
+                    override fun onFailure(call: Call<List<Cart>>?, t: Throwable) {
+                        Log.d(TAG, "fail to get data")
+                        onError(t.message ?: "unknown error")
+                    }
+
+                    override fun onResponse(
+                            call: Call<List<Cart>>?,
+                            response: Response<List<Cart>>
+                    ) {
+                        Log.d(TAG, "got a response $response")
+                        if (response.isSuccessful) {
+                            val orders = response.body() ?: emptyList()
+                            Log.d("orders",orders.toString())
+                            onSuccess(orders)
                         } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
                         }
@@ -198,7 +230,6 @@ interface MainService {
             @Field("grant_type") grant_type: String,
             @Field("client_id") client_id: String): Call<TokenResponse>
 
-
     @POST("/api/accounts/create")
     fun register(
             @Body createUserModel : CreateUserModel): Call<Void>
@@ -208,6 +239,10 @@ interface MainService {
                     @Query("page") page: Int,
                     @Query("itemsPerPage") itemsPerPage: Int,
                     @Query("query") query: String): Call<List<Coffee>>
+
+    @GET("/api/orders")
+    fun findOrders(
+            @Header("Authorization") token: String): Call<List<Cart>>
 
 
     @GET("api/accounts/sendpasswordreset")

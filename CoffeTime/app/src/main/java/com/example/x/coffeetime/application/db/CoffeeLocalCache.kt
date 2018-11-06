@@ -12,7 +12,6 @@ import java.util.concurrent.Executor
  */
 class CoffeeLocalCache(
         private val coffeeDao: CoffeeDao,
-        private val tokenDao: TokenDao,
         private val ioExecutor: Executor
 ) {
 

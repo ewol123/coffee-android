@@ -5,19 +5,21 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 import com.example.x.coffeetime.application.model.Token
 import java.util.concurrent.Executors
 
 @Database(
-        entities = [Token::class, Coffee::class],
-        version = 2,
+        entities = [Token::class, Coffee::class, Cart::class],
+        version = 3,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun tokenDao(): TokenDao
     abstract fun coffeeDao(): CoffeeDao
+    abstract fun cartDao(): CartDao
 
     companion object {
 
