@@ -98,6 +98,9 @@ class MainActivity : AppCompatActivity() {
                 "reset_pass_fragment" ->{
                     toolbar?.title="Reset password"
                 }
+                "cart_fragment" ->{
+                    toolbar?.title="Cart"
+                }
 
             }
 

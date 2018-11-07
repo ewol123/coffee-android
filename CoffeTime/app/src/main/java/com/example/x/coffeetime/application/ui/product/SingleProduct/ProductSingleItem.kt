@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
@@ -42,7 +43,22 @@ class ProductSingleItem : Fragment() {
         singleProductViewModel = ViewModelProviders.of(this, Injection.provideProductViewModelFactory(context!!))
                 .get(ProductSingleItemViewModel::class.java)
 
-        var id = arguments?.getInt("id")
+        var id = arguments?.getInt("id") ?: 0
+
+        viewOrdersBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_singleItem_to_cart)
+        }
+
+
+        if(id != 0){
+            singleProductViewModel.coffeeQuantityById(id).observe(this,Observer{ cart ->
+
+                var quantity = cart?.get(0)?.quantity
+                productQuantity.text = quantity.toString()
+                coffeePrice.text =  "${cart?.get(0)?.price}$/ea"
+            })
+
+        }
 
 
 

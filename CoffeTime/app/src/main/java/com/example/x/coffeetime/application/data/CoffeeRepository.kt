@@ -4,26 +4,25 @@ import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.util.Log
-import com.example.x.coffeetime.application.api.ApiService
-import com.example.x.coffeetime.application.api.BindingModel.PaginationModel
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.db.CoffeeLocalCache
+import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 import com.example.x.coffeetime.application.model.CoffeeSearchResult
 
 class CoffeeRepository(
         private val service: MainService,
-        private val cache: CoffeeLocalCache
+        private val coffeeCache: CoffeeLocalCache
 ) {
 
     fun search(query: String ): CoffeeSearchResult {
         Log.d("CoffeeRepository", "New query: $query")
 
-        // Get data source factory from the local cache
-        val dataSourceFactory = cache.coffeesByName(query)
+        // Get data source factory from the local coffeeCache
+        val dataSourceFactory = coffeeCache.coffeesByName(query)
 
         // Construct the boundary callback
-        val boundaryCallback = CoffeeBoundaryCallback(query, service, cache)
+        val boundaryCallback = CoffeeBoundaryCallback(query, service, coffeeCache)
 
         val networkErrors = boundaryCallback.networkErrors
 
@@ -46,7 +45,11 @@ class CoffeeRepository(
 
 
     fun coffeeById(id: Int) : LiveData<List<Coffee>> {
-        return cache.coffeesById(id)
+        return coffeeCache.coffeesById(id)
+    }
+
+    fun coffeeQuantityById(id: Int) : LiveData<List<Cart>> {
+        return coffeeCache.coffeeQuantityById(id)
     }
 
     companion object {

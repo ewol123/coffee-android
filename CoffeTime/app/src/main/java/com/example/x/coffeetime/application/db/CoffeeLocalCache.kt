@@ -3,6 +3,7 @@ package com.example.x.coffeetime.application.db
 import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
 import android.util.Log
+import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 import java.util.concurrent.Executor
 
@@ -12,7 +13,8 @@ import java.util.concurrent.Executor
  */
 class CoffeeLocalCache(
         private val coffeeDao: CoffeeDao,
-        private val ioExecutor: Executor
+        private val ioExecutor: Executor,
+        private val cartDao: CartDao
 ) {
 
     /**
@@ -41,6 +43,10 @@ class CoffeeLocalCache(
 
     fun coffeesById(id: Int): LiveData<List<Coffee>>  {
         return coffeeDao.coffeesById(id)
+    }
+
+    fun coffeeQuantityById(id: Int) : LiveData<List<Cart>> {
+        return cartDao.getCoffeeQuantity(id)
     }
 
 }

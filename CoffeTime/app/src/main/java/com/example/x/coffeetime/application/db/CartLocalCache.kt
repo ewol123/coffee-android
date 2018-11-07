@@ -15,10 +15,11 @@ class CartLocalCache(
 ) {
 
 
-    fun insert(cart: List<Cart>) {
+    fun insert(cart: List<Cart>, insertFinished: () ->Unit) {
         ioExecutor.execute {
             Log.d("CartLocalCache", "inserting ${cart.size} orders")
             cartDao.insert(cart)
+            insertFinished()
         }
     }
 
@@ -32,6 +33,7 @@ class CartLocalCache(
     fun findOrders(): LiveData<List<Cart>> {
         return cartDao.getOrders()
     }
+
 
 
 

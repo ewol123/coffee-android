@@ -15,10 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import android.R.id.edit
 import android.app.Application
+import android.arch.lifecycle.LiveData
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.model.Cart
+import com.example.x.coffeetime.application.model.Token
 
 
 private const val TAG = "MainService"
@@ -134,11 +136,11 @@ fun register(
     fun findOrders(
             service: MainService,
             onSuccess: (orders: List<Cart>) -> Unit,
-            onError: (error: String) -> Unit) {
+            onError: (error: String) -> Unit,
+            token: String) {
 
-       var token = Injection.provideLoginRepository().token.value?.get(0)?.token  ?: "no token"
 
-        service.findOrders(token).enqueue(
+        service.findOrders("Bearer $token").enqueue(
                 object : Callback<List<Cart>> {
                     override fun onFailure(call: Call<List<Cart>>?, t: Throwable) {
                         Log.d(TAG, "fail to get data")
@@ -240,6 +242,7 @@ interface MainService {
                     @Query("itemsPerPage") itemsPerPage: Int,
                     @Query("query") query: String): Call<List<Coffee>>
 
+    @Headers("Accept: application/json", "Content-Type: application/json")
     @GET("/api/orders")
     fun findOrders(
             @Header("Authorization") token: String): Call<List<Cart>>

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.model.Cart
+import com.example.x.coffeetime.application.model.Token
 import kotlinx.android.synthetic.main.cart_fragment.*
 import kotlinx.android.synthetic.main.product_fragment.*
 
@@ -47,6 +48,13 @@ class CartFragment : Fragment() {
 
         cartList.adapter = adapter
 
+        viewModel.token.observe(this, Observer{ token ->
+            if(token!!.isNotEmpty()){
+                Log.d("ORDER-TOKEN", token[0].token)
+                viewModel.initCart(token[0].token)
+            }
+        })
+
         viewModel.cart.observe(this, Observer<List<Cart>>{
 
             if(it!!.isNotEmpty()){
@@ -54,6 +62,7 @@ class CartFragment : Fragment() {
 
                 adapter.addToCart(it)
 
+                totalPrice = 0
                 it.forEach{
                     totalPrice += it.totalPrice
                 }

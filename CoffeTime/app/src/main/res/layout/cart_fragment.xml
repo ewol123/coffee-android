@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cart_empty"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         android:drawableStart="@drawable/ic_remove_shopping_cart_black_24dp"
         android:textStyle="bold"
@@ -20,15 +21,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cartList"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:paddingVertical="20dp"
         android:scrollbars="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.55" />
+        app:layout_constraintGuide_percent="0.63" />
 
 
     <TextView
@@ -49,7 +48,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/cart_subtotal"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -68,7 +66,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:visibility="gone"
         android:textSize="20sp"
@@ -82,7 +79,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:visibility="gone"
         android:layout_marginEnd="8dp"
         android:text="@string/includes_taxes_and_discounts"

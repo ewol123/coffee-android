@@ -104,6 +104,16 @@
         android:id="@+id/productSingleItem"
         android:name="com.example.x.coffeetime.application.ui.product.SingleProduct.ProductSingleItem"
         android:label="ProductSingleItem" >
+
+        <action
+            android:id="@+id/action_singleItem_to_cart"
+            app:destination="@id/cartFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+
+
         <argument
             android:name="id"
             android:defaultValue="0"

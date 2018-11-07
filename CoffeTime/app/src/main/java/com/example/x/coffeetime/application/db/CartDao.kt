@@ -7,7 +7,6 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.example.x.coffeetime.application.model.Cart
-import com.example.x.coffeetime.application.model.Token
 
 @Dao
 interface CartDao {
@@ -21,6 +20,9 @@ interface CartDao {
 
     @Query("DELETE FROM cart")
     fun delete()
+
+    @Query("SELECT  * FROM cart WHERE (id == :coffeeId)")
+    fun getCoffeeQuantity(coffeeId: Int) : LiveData<List<Cart>>
 
 
 }
