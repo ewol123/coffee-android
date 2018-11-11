@@ -261,7 +261,7 @@ interface MainService {
     ): Call<String>
 
     companion object {
-        private const val BASE_URL ="http://192.168.1.108:5819"
+        private const val BASE_URL ="http://192.168.1.102:5819"
 
 
         fun create(): MainService {

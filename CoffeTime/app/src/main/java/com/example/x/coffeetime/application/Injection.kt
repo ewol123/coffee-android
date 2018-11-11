@@ -31,8 +31,8 @@ object Injection {
         return CoffeeLocalCache(database.coffeeDao(), Executors.newSingleThreadExecutor(), database.cartDao())
     }
 
-    private fun provideCartCache(): CartLocalCache {
-        val database = AppDatabase.getInstance(provideContext(Application()))
+    private fun provideCartCache(context: Context): CartLocalCache {
+        val database = AppDatabase.getInstance(context)
         return CartLocalCache(database.cartDao(),Executors.newSingleThreadExecutor())
 
     }
@@ -43,9 +43,8 @@ object Injection {
 
 
 
-    fun provideCartRepository(): CartRepository{
-        val database = AppDatabase.getInstance(provideContext(Application()))
-        return CartRepository(MainService.create(), ApiService(), provideCartCache())
+    fun provideCartRepository(context: Context): CartRepository{
+        return CartRepository(MainService.create(), ApiService(), provideCartCache(context))
     }
 
      fun provideLoginRepository(): LoginRepository{

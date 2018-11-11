@@ -6,7 +6,7 @@ import com.example.x.coffeetime.application.data.CoffeeRepository
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 
-class ProductSingleItemViewModel(private val repository: CoffeeRepository) : ViewModel() {
+class SingleProductViewModel(private val repository: CoffeeRepository) : ViewModel() {
 
 
     fun coffeeById(id: Int) : LiveData<List<Coffee>>  {

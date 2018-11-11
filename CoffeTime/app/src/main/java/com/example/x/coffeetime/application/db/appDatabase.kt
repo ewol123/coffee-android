@@ -12,7 +12,7 @@ import java.util.concurrent.Executors
 
 @Database(
         entities = [Token::class, Coffee::class, Cart::class],
-        version = 3,
+        version = 4,
         exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -55,7 +55,6 @@ abstract class AppDatabase : RoomDatabase() {
                 // comment out the following line.
                 INSTANCE?.let { database ->
                     Executors.newSingleThreadExecutor().execute {
-                        database.coffeeDao().delete()
                         database.tokenDao().deleteAll()
                      }
                     }

@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +15,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.model.Cart
-import com.example.x.coffeetime.application.model.Token
 import kotlinx.android.synthetic.main.cart_fragment.*
-import kotlinx.android.synthetic.main.product_fragment.*
 
 class CartFragment : Fragment() {
 
@@ -27,10 +27,13 @@ class CartFragment : Fragment() {
     private var totalPrice : Int = 0
     private val adapter = CartAdapter(arrayListOf(),{cart ->
         val bundle = Bundle()
+        bundle.putInt("coffeeId", cart.coffeeId)
         bundle.putInt("id", cart.id)
         findNavController().navigate(R.id.action_cart_to_SingleItem,bundle)
-    },{Int ->
-        Log.i("Add product", Int.toString())
+    },{id ->
+        Log.d("Add product", id.toString())
+    }, {id ->
+        Log.d("Remove product", id.toString())
     } )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +64,7 @@ class CartFragment : Fragment() {
                 cartEmpty.visibility = View.GONE
 
                 adapter.addToCart(it)
+
 
                 totalPrice = 0
                 it.forEach{

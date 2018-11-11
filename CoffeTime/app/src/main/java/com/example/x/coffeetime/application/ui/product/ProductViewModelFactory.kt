@@ -3,7 +3,7 @@ package com.example.x.coffeetime.application.ui.product
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.example.x.coffeetime.application.data.CoffeeRepository
-import com.example.x.coffeetime.application.ui.product.SingleProduct.ProductSingleItemViewModel
+import com.example.x.coffeetime.application.ui.product.SingleProduct.SingleProductViewModel
 
 
 class ProductViewModelFactory(private val repository: CoffeeRepository) : ViewModelProvider.Factory {
@@ -13,9 +13,9 @@ class ProductViewModelFactory(private val repository: CoffeeRepository) : ViewMo
             @Suppress("UNCHECKED_CAST")
             return SearchProductViewModel(repository) as T
         }
-        else if (modelClass.isAssignableFrom(ProductSingleItemViewModel::class.java)){
+        else if (modelClass.isAssignableFrom(SingleProductViewModel::class.java)){
             @Suppress("UNCHECKED CAST")
-            return ProductSingleItemViewModel(repository) as T
+            return SingleProductViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

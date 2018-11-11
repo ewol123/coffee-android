@@ -102,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/productSingleItem"
-        android:name="com.example.x.coffeetime.application.ui.product.SingleProduct.ProductSingleItem"
+        android:name="com.example.x.coffeetime.application.ui.product.SingleProduct.SingleProductFragment"
         android:label="ProductSingleItem" >
 
         <action

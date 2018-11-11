@@ -80,6 +80,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/nope"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        android:text="@string/nope"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.v7.widget.CardView
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
@@ -103,7 +118,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="RESCAN"
+                android:text="@string/rescan"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -143,6 +158,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.04" />
+
+
 
 
         </android.support.constraint.ConstraintLayout>

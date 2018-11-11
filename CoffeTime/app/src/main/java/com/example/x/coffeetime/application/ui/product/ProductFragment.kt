@@ -20,7 +20,6 @@ import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.model.Coffee
 import kotlinx.android.synthetic.main.product_fragment.*
 import android.support.v7.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.product_item.view.*
 
 
 class ProductFragment : Fragment() {
@@ -28,15 +27,19 @@ class ProductFragment : Fragment() {
     private val CAMERA_REQUEST_CODE = 100
     private lateinit var viewModel: ProductViewModel
     private lateinit var productViewModel: SearchProductViewModel
-    private val adapter = CoffeesAdapter({coffee ->
-            Log.i("Coffee:", "${coffee.coffeeId} clicked")
+    private val adapter = ProductAdapter({ coffee ->
+            Log.i("Coffee:", "$coffee clicked")
 
             val bundle = Bundle()
-            bundle.putInt("id", coffee.coffeeId)
+            bundle.putInt("coffeeId", coffee.coffeeId)
+
             findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
 
-    }, {Int ->
-        Log.i("Add product", Int.toString())
+    }, {id ->
+        Log.i("Add product", id.toString())
+    }, {id ->
+        Log.i("Decrease product", id.toString())
+
     })
 
 
@@ -54,35 +57,48 @@ class ProductFragment : Fragment() {
         productViewModel = ViewModelProviders.of(this, Injection.provideProductViewModelFactory(context!!))
                 .get(SearchProductViewModel::class.java)
 
+        observeCart()
+
         viewModel.token.observe(this, Observer { token ->
             if(token!!.isEmpty()){
 
-
-
                findNavController().navigate(R.id.action_menu_to_login,null)
 
-
             } else if(token?.isNotEmpty()) {
+                viewModel.initCart(token.get(0).token)
 
                 Log.d("ez a token", token.get(0).token)
 
                 val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-                val defaultValue = "empty"
+                val defaultValue = "coffeeshop123"
                 val barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
 
-                if(barcode != "empty"){
-                    scanButton?.visibility = View.GONE
-                    barcodeText?.visibility = View.GONE
-                    emptyList?.visibility = View.VISIBLE
-                    list?.visibility = View.VISIBLE
-                    input_layout?.visibility = View.VISIBLE
-                    tableText?.text = barcode
-                    bottomBar?.visibility = View.VISIBLE
+                if(barcode != "coffeeshop123") {
+                    if (validateBarcode(barcode!!)) {
+                        nope.visibility = View.GONE
+                        scanButton?.visibility = View.GONE
+                        barcodeText?.visibility = View.GONE
+                        emptyList?.visibility = View.VISIBLE
+                        list?.visibility = View.VISIBLE
+                        input_layout?.visibility = View.VISIBLE
+                        tableText?.text = barcode
+                        bottomBar?.visibility = View.VISIBLE
 
-                    val query = productViewModel.lastQueryValue() ?: DEFAULT_QUERY
-                    productViewModel.searchCoffee(query)
-                    initAdapter()
-                    initSearch()
+                        val query = productViewModel.lastQueryValue() ?: DEFAULT_QUERY
+                        productViewModel.searchCoffee(query)
+                        initAdapter()
+                        initSearch()
+
+                    } else {
+                        scanButton?.visibility = View.GONE
+                        barcodeText?.visibility = View.GONE
+                        emptyList?.visibility = View.GONE
+                        tableText?.text = barcode
+                        list?.visibility = View.GONE
+                        input_layout?.visibility = View.GONE
+                        bottomBar?.visibility = View.VISIBLE
+                        nope.visibility = View.VISIBLE
+                    }
 
                 }
             }
@@ -97,6 +113,28 @@ class ProductFragment : Fragment() {
         }
     }
 
+    private fun observeCart(){
+
+
+        viewModel.cart.observe(this, Observer { cart ->
+          adapter.setCart(cart?: emptyList())
+        })
+    }
+
+    private fun validateBarcode(barcode: String): Boolean{
+
+
+        var isValid = 0
+        for (a in 1..15){
+            if(barcode == (a.toString())){
+                isValid++
+            }
+        }
+        return if (isValid > 0 ) true else false
+
+    }
+
+
     private fun initAdapter() {
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
@@ -104,6 +142,7 @@ class ProductFragment : Fragment() {
             Log.d("Activity", "list: ${it?.size}")
             showEmptyList(it?.size == 0)
             adapter.submitList(it)
+
 
         })
         productViewModel.networkErrors.observe(this, Observer<String> {

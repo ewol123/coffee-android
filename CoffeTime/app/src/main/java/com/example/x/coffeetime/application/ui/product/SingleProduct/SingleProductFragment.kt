@@ -2,35 +2,29 @@ package com.example.x.coffeetime.application.ui.product.SingleProduct
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.transition.ChangeBounds
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
-import com.example.x.coffeetime.application.model.Coffee
 import com.squareup.picasso.Picasso
-import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.product_single_item_fragment.*
 
-class ProductSingleItem : Fragment() {
+class SingleProductFragment : Fragment() {
 
-    private lateinit var singleProductViewModel: ProductSingleItemViewModel
+    private lateinit var singleViewModel: SingleProductViewModel
 
     companion object {
-        fun newInstance() = ProductSingleItem()
+        fun newInstance() = SingleProductFragment()
     }
 
-    private lateinit var viewModel: ProductSingleItemViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -40,10 +34,11 @@ class ProductSingleItem : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        singleProductViewModel = ViewModelProviders.of(this, Injection.provideProductViewModelFactory(context!!))
-                .get(ProductSingleItemViewModel::class.java)
+        singleViewModel = ViewModelProviders.of(this, Injection.provideProductViewModelFactory(context!!))
+                .get(SingleProductViewModel::class.java)
 
         var id = arguments?.getInt("id") ?: 0
+        var coffeeId = arguments?.getInt("coffeeId") ?: 0
 
         viewOrdersBtn.setOnClickListener {
             findNavController().navigate(R.id.action_singleItem_to_cart)
@@ -51,30 +46,30 @@ class ProductSingleItem : Fragment() {
 
 
         if(id != 0){
-            singleProductViewModel.coffeeQuantityById(id).observe(this,Observer{ cart ->
-
+            singleViewModel.coffeeQuantityById(id).observe(this,Observer{ cart ->
+                Log.d("cart:", cart.toString())
                 var quantity = cart?.get(0)?.quantity
                 productQuantity.text = quantity.toString()
-                coffeePrice.text =  "${cart?.get(0)?.price}$/ea"
             })
 
         }
 
 
-
-        singleProductViewModel.coffeeById(id!!).observe(this, Observer<List<Coffee>> {
-
-            if(it!!.isNotEmpty()){
+        if(coffeeId != 0 ){
+        singleViewModel.coffeeById(coffeeId).observe(this, Observer { coffee ->
+            Log.d("id", coffeeId.toString())
+            Log.d("coffee:", coffee.toString())
+            if(coffee!!.isNotEmpty()){
                 Picasso.get()
-                        .load(it[0].imagePath)
+                        .load(coffee[0].imagePath)
                         .fit()
                         .centerCrop()
                         .into(coffeeImage)
-                coffeeName.text = it[0].name
-                coffeeDescription.text = it[0].description
-                coffeePrice.text = it[0].price +"$"
+                coffeeName.text = coffee[0].name
+                coffeeDescription.text = coffee[0].description
+                coffeePrice.text = "$ ${coffee[0].price}/ea"
 
-                for(i in 1..it[0].strength){
+                for(i in 1..coffee[0].strength){
 
                     var  param: LinearLayout.LayoutParams =
                      LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -88,6 +83,16 @@ class ProductSingleItem : Fragment() {
                   }
             }
         })
+        }
+
+            removeProduct.setOnClickListener {
+                Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
+            }
+
+            addProduct.setOnClickListener {
+                Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
+
+            }
 
 
     }

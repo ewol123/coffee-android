@@ -45,7 +45,6 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/background"
             android:paddingBottom="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -56,7 +55,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="@string/test_text"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/guideline9"
@@ -67,7 +65,6 @@
             android:id="@+id/cart_coffee_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/price_test"
             android:layout_marginStart="8dp"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -85,7 +82,6 @@
             android:textSize="25sp"
             android:textStyle="bold"
             android:layout_marginTop="8dp"
-            android:text="@string/test_total_price"
             app:layout_constraintStart_toEndOf="@+id/cart_image"
             app:layout_constraintTop_toBottomOf="@+id/cart_coffee_price" />
 
@@ -94,23 +90,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/test_quantity"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/coffee_total_price"
             app:layout_constraintTop_toBottomOf="@+id/coffee_total_price" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAddProductCart"
+            android:id="@+id/cartAddProduct"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="8dp"
-            app:fabSize="mini"
+            android:layout_marginBottom="8dp"
             android:src="@drawable/ic_add_white_24dp"
+            app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline10" />
+            app:layout_constraintTop_toBottomOf="@+id/cart_image" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/cartSubstractProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_remove_white_24dp"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cart_image" />
+
 
         <ImageButton
             android:id="@+id/cartFavButton"
@@ -122,6 +132,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_star_border_orange_40dp" />
+
+        <ImageButton
+            android:id="@+id/deleteProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@null"
+            app:layout_constraintBottom_toTopOf="@+id/cartAddProduct"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cartFavButton"
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
 
 
     </android.support.constraint.ConstraintLayout>

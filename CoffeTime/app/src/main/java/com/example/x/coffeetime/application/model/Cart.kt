@@ -15,5 +15,8 @@ data class Cart(
         @field:SerializedName("description") val description: String,
         @field:SerializedName("strength") val strength: Int,
         @field:SerializedName("quantity") val quantity: Int,
-        @field:SerializedName("totalPrice") val totalPrice: Int
+        @field:SerializedName("totalPrice") val totalPrice: Int,
+        @field:SerializedName("coffeeId") val coffeeId: Int
+
+
 )

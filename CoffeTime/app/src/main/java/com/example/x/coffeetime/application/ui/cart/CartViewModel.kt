@@ -18,7 +18,7 @@ class CartViewModel(application: Application) : AndroidViewModel(application) {
     private val loginRepo: LoginRepository
 
     init {
-        repository = Injection.provideCartRepository()
+        repository = Injection.provideCartRepository(application)
         loginRepo = Injection.provideLoginRepository()
     }
 

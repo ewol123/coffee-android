@@ -17,7 +17,10 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.cart_item.view.*
 import kotlinx.android.synthetic.main.product_item.view.*
 
-class CartAdapter(cart: List<Cart>,val listener: (Cart) -> Unit, val onItemClick: (Int) -> Unit) : RecyclerView.Adapter<CartAdapter.RecyclerViewHolder>() {
+class CartAdapter(cart: List<Cart>,
+                  val listener: (Cart) -> Unit,
+                  val addItem: (Int) -> Unit,
+                  val removeItem: (Int) -> Unit) : RecyclerView.Adapter<CartAdapter.RecyclerViewHolder>() {
 
     private var listCart: List<Cart> = cart
 
@@ -56,8 +59,12 @@ class CartAdapter(cart: List<Cart>,val listener: (Cart) -> Unit, val onItemClick
             listener(currentCart)
         }
 
-        holder.itemView.fabAddProductCart.setOnClickListener {
-            onItemClick(currentCart.id)
+        holder.mfabAddProductCart.setOnClickListener {
+            addItem(currentCart.coffeeId)
+        }
+
+        holder.mfabRemoveProductCart.cartSubstractProduct.setOnClickListener {
+            removeItem(currentCart.coffeeId)
         }
 
     }
@@ -74,7 +81,8 @@ class CartAdapter(cart: List<Cart>,val listener: (Cart) -> Unit, val onItemClick
         var mCoffeePrice = itemView.findViewById<TextView>(R.id.cart_coffee_price)!!
         var mCoffeeTotalPrice = itemView.findViewById<TextView>(R.id.coffee_total_price)!!
         var mCoffeeQuantity = itemView.findViewById<TextView>(R.id.cart_coffee_quantity)!!
-        var mfabAddProductCart = itemView.findViewById<FloatingActionButton>(R.id.fabAddProductCart)!!
+        var mfabAddProductCart = itemView.findViewById<FloatingActionButton>(R.id.cartAddProduct)!!
+        var mfabRemoveProductCart = itemView.findViewById<FloatingActionButton>(R.id.cartSubstractProduct)!!
         var mCartFavButton = itemView.findViewById<ImageButton>(R.id.cartFavButton)!!
 
     }
