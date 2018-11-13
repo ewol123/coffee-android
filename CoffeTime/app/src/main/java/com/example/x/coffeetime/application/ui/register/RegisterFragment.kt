@@ -11,13 +11,14 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
+import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.api.BindingModel.CreateUserModel
 import kotlinx.android.synthetic.main.register_fragment.*
 
 class RegisterFragment : Fragment() {
 
 
-    private lateinit var viewModel: RegisterViewModel
+    private lateinit var registerViewModel: RegisterViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -27,8 +28,8 @@ class RegisterFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(RegisterViewModel::class.java)
-        // TODO: Use the ViewModel
+        registerViewModel = ViewModelProviders.of(this,
+                Injection.provideViewModelFactory(context!!)).get(RegisterViewModel::class.java)
 
 
         regGoBack?.setOnClickListener {
@@ -44,11 +45,11 @@ class RegisterFragment : Fragment() {
 
             var createUserModel = CreateUserModel(email,password,confirmPassword)
 
-            var isValidEmail : Boolean = viewModel.validator.validateEmail(regEmail)
-            var isValidPassword : Boolean = viewModel.validator.validatePassword(regPassword,regConfirmPassword)
+            var isValidEmail : Boolean = registerViewModel.validator.validateEmail(regEmail)
+            var isValidPassword : Boolean = registerViewModel.validator.validatePassword(regPassword,regConfirmPassword)
 
             if(isValidEmail && isValidPassword){
-            viewModel.register(createUserModel,context,{success ->
+            registerViewModel.register(createUserModel,context,{ success ->
                 regEmail?.text?.clear()
                 regPassword?.text?.clear()
                 regConfirmPassword?.text?.clear()

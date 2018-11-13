@@ -2,37 +2,27 @@ package com.example.x.coffeetime.application.ui.cart
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.example.x.coffeetime.application.Injection
-import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.data.CartRepository
-import com.example.x.coffeetime.application.data.LoginRepository
-import com.example.x.coffeetime.application.model.Cart
-import com.example.x.coffeetime.application.model.Token
+import com.example.x.coffeetime.application.data.AuthRepository
 
-class CartViewModel(application: Application) : AndroidViewModel(application) {
+class CartViewModel(private val cartRepository: CartRepository,
+                    private val authRepo: AuthRepository) : ViewModel() {
 
-    private val repository: CartRepository
-    private val loginRepo: LoginRepository
-
-    init {
-        repository = Injection.provideCartRepository(application)
-        loginRepo = Injection.provideLoginRepository()
-    }
 
 
     fun initCart(token : String){
 
-        repository.getCart({success ->
+        cartRepository.getCart({success ->
             Log.d("CART_SUCCESS", success)
         }, {error ->
             Log.d("CART_ERROR", error)
         },token)
     }
 
-    val token = loginRepo.token
-    val cart = repository.findOrders()
+    val token = authRepo.token
+    val cart = cartRepository.findOrders()
 
 }

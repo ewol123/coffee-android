@@ -21,8 +21,6 @@ interface CartDao {
     @Query("DELETE FROM cart")
     fun delete()
 
-    @Query("SELECT  * FROM cart WHERE (id == :coffeeId)")
-    fun getCoffeeQuantity(coffeeId: Int) : LiveData<List<Cart>>
 
 
 }

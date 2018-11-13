@@ -4,5 +4,5 @@ data class CreateUserModel(
                         val Email: String,
                         val Password: String,
                         val ConfirmPassword: String
-                      ) {}
+                      )
 

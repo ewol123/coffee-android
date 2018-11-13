@@ -19,6 +19,7 @@ import android.arch.lifecycle.LiveData
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Token
 
@@ -215,6 +216,81 @@ fun register(
         )
     }
 
+    fun increaseProduct(
+            service: MainService,
+            token: String,
+            orderQuantityModel: OrderQuantityModel,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit) {
+
+        service.increaseProduct("Bearer $token",orderQuantityModel).enqueue(
+                object : Callback<String> {
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        onError(t.message?: "unknown error")
+                    }
+
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if(response.isSuccessful){
+                            onSuccess(response.body() ?:"changed")
+                        }
+                        else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+    fun decreaseProduct(
+            service: MainService,
+            token: String,
+            orderQuantityModel: OrderQuantityModel,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit) {
+
+        service.decreaseProduct("Bearer $token",orderQuantityModel).enqueue(
+                object : Callback<String> {
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        onError(t.message?: "unknown error")
+                    }
+
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if(response.isSuccessful){
+                            onSuccess(response.body() ?:"changed")
+                        }
+                        else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+    fun deleteProduct(
+            service: MainService,
+            token: String,
+            id: Int,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit) {
+
+        service.deleteProduct("Bearer $token",id).enqueue(
+                object : Callback<String> {
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        onError(t.message?: "unknown error")
+                    }
+
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if(response.isSuccessful){
+                            onSuccess(response.body() ?:"deleted")
+                        }
+                        else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
 }
 
 
@@ -258,6 +334,27 @@ interface MainService {
             @Query("token") token: String,
             @Query("email") email: String,
             @Query("newPass") newPass: String
+    ): Call<String>
+
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @POST("api/orders/increaseProduct")
+    fun increaseProduct(
+            @Header("Authorization") token: String,
+            @Body orderQuantityModel : OrderQuantityModel
+    ): Call<String>
+
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @POST("api/orders/decreaseProduct")
+    fun decreaseProduct(
+            @Header("Authorization") token: String,
+            @Body orderQuantityModel : OrderQuantityModel
+    ): Call<String>
+
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @DELETE("api/orders/deleteProduct")
+    fun deleteProduct(
+            @Header("Authorization") token: String,
+            @Query("id") id: Int
     ): Call<String>
 
     companion object {

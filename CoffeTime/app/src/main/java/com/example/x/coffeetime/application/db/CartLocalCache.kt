@@ -17,9 +17,11 @@ class CartLocalCache(
 
     fun insert(cart: List<Cart>, insertFinished: () ->Unit) {
         ioExecutor.execute {
+            delete{
+                cartDao.insert(cart)
+                insertFinished()
+            }
             Log.d("CartLocalCache", "inserting ${cart.size} orders")
-            cartDao.insert(cart)
-            insertFinished()
         }
     }
 

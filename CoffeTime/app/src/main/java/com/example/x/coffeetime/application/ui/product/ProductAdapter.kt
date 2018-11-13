@@ -69,6 +69,7 @@ class ProductAdapter(val listener: (Coffee) -> Unit,
     fun setCart(list: List<Cart>){
         cart = list
         Log.d("LIST:",cart.toString())
+        notifyDataSetChanged()
     }
 
     companion object {

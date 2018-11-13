@@ -25,15 +25,15 @@ import android.support.v7.widget.LinearLayoutManager
 class ProductFragment : Fragment() {
 
     private val CAMERA_REQUEST_CODE = 100
-    private lateinit var viewModel: ProductViewModel
-    private lateinit var productViewModel: SearchProductViewModel
-    private val adapter = ProductAdapter({ coffee ->
-            Log.i("Coffee:", "$coffee clicked")
+    private lateinit var productViewModel: ProductViewModel
+    var adapter = ProductAdapter({ coffee ->
+        Log.i("Coffee:", "$coffee clicked")
 
-            val bundle = Bundle()
-            bundle.putInt("coffeeId", coffee.coffeeId)
+        val bundle = Bundle()
+        bundle.putInt("coffeeId", coffee.coffeeId)
 
-            findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
+
+        findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
 
     }, {id ->
         Log.i("Add product", id.toString())
@@ -52,20 +52,23 @@ class ProductFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ProductViewModel::class.java)
-
-        productViewModel = ViewModelProviders.of(this, Injection.provideProductViewModelFactory(context!!))
-                .get(SearchProductViewModel::class.java)
+        productViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(context!!))
+                .get(ProductViewModel::class.java)
 
         observeCart()
 
-        viewModel.token.observe(this, Observer { token ->
+        productViewModel.token.observe(this, Observer { token ->
             if(token!!.isEmpty()){
 
                findNavController().navigate(R.id.action_menu_to_login,null)
 
-            } else if(token?.isNotEmpty()) {
-                viewModel.initCart(token.get(0).token)
+
+
+            } else if(token.isNotEmpty()) {
+
+               saveToken(token.get(0).token)
+
+                productViewModel.getCart(token.get(0).token)
 
                 Log.d("ez a token", token.get(0).token)
 
@@ -116,9 +119,19 @@ class ProductFragment : Fragment() {
     private fun observeCart(){
 
 
-        viewModel.cart.observe(this, Observer { cart ->
+        productViewModel.cart.observe(this, Observer { cart ->
           adapter.setCart(cart?: emptyList())
         })
+    }
+
+
+
+    private fun saveToken(token: String){
+        val tokenPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        tokenPref
+                ?.edit()
+                ?.putString(getString(R.string.preference_token_key), token )
+                ?.apply()
     }
 
     private fun validateBarcode(barcode: String): Boolean{

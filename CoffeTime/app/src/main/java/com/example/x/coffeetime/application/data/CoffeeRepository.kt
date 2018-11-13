@@ -48,9 +48,7 @@ class CoffeeRepository(
         return coffeeCache.coffeesById(id)
     }
 
-    fun coffeeQuantityById(id: Int) : LiveData<List<Cart>> {
-        return coffeeCache.coffeeQuantityById(id)
-    }
+
 
     companion object {
         private const val DATABASE_PAGE_SIZE = 30

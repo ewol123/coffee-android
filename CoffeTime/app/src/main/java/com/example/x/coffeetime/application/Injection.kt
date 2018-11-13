@@ -7,11 +7,11 @@ import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.CoffeeRepository
-import com.example.x.coffeetime.application.data.LoginRepository
+import com.example.x.coffeetime.application.data.AuthRepository
 import com.example.x.coffeetime.application.db.CoffeeLocalCache
 import com.example.x.coffeetime.application.db.AppDatabase
 import com.example.x.coffeetime.application.db.CartLocalCache
-import com.example.x.coffeetime.application.ui.product.ProductViewModelFactory
+import com.example.x.coffeetime.application.ui.product.ViewModelFactory
 import java.util.concurrent.Executors
 
 
@@ -22,13 +22,17 @@ import java.util.concurrent.Executors
  */
 object Injection {
 
-    private fun provideContext(application: Application): Context {
+     fun provideContext(application: Application): Context {
         return application
     }
 
-    private fun provideCache(context: Context): CoffeeLocalCache {
+    private fun provideCoffeeCache(context: Context): CoffeeLocalCache {
         val database = AppDatabase.getInstance(context)
-        return CoffeeLocalCache(database.coffeeDao(), Executors.newSingleThreadExecutor(), database.cartDao())
+        return CoffeeLocalCache(database.coffeeDao(), Executors.newSingleThreadExecutor())
+    }
+
+    private fun provideCoffeeRepository(context: Context): CoffeeRepository {
+        return CoffeeRepository(MainService.create(), provideCoffeeCache(context))
     }
 
     private fun provideCartCache(context: Context): CartLocalCache {
@@ -36,24 +40,17 @@ object Injection {
         return CartLocalCache(database.cartDao(),Executors.newSingleThreadExecutor())
 
     }
-
-    private fun provideCoffeeRepository(context: Context): CoffeeRepository {
-        return CoffeeRepository(MainService.create(), provideCache(context))
-    }
-
-
-
-    fun provideCartRepository(context: Context): CartRepository{
+    private fun provideCartRepository(context: Context): CartRepository{
         return CartRepository(MainService.create(), ApiService(), provideCartCache(context))
     }
 
-     fun provideLoginRepository(): LoginRepository{
+     private fun provideAuthRepository(): AuthRepository{
         val database = AppDatabase.getInstance(provideContext(Application()))
-        return LoginRepository(ApiService(), MainService.create(),database.tokenDao(), Executors.newSingleThreadExecutor())
+        return AuthRepository(ApiService(), MainService.create(),database.tokenDao(), Executors.newSingleThreadExecutor())
     }
 
-    fun provideProductViewModelFactory(context: Context): ViewModelProvider.Factory {
-        return ProductViewModelFactory(provideCoffeeRepository(context))
+    fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
+        return ViewModelFactory(provideCoffeeRepository(context), provideCartRepository(context), provideAuthRepository())
     }
 
 }

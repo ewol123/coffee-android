@@ -13,8 +13,7 @@ import java.util.concurrent.Executor
  */
 class CoffeeLocalCache(
         private val coffeeDao: CoffeeDao,
-        private val ioExecutor: Executor,
-        private val cartDao: CartDao
+        private val ioExecutor: Executor
 ) {
 
     /**
@@ -45,8 +44,7 @@ class CoffeeLocalCache(
         return coffeeDao.coffeesById(id)
     }
 
-    fun coffeeQuantityById(id: Int) : LiveData<List<Cart>> {
-        return cartDao.getCoffeeQuantity(id)
-    }
+
+
 
 }

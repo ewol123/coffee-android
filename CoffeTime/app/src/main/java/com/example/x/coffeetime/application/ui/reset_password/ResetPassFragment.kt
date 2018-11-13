@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
+import com.example.x.coffeetime.application.Injection
 import kotlinx.android.synthetic.main.reset_pass_fragment.*
 
 class ResetPassFragment : Fragment() {
@@ -19,7 +20,7 @@ class ResetPassFragment : Fragment() {
         fun newInstance() = ResetPassFragment()
     }
 
-    private lateinit var viewModel: ResetPassViewModel
+    private lateinit var resetPassViewModel: ResetPassViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,7 +29,8 @@ class ResetPassFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ResetPassViewModel::class.java)
+        resetPassViewModel = ViewModelProviders.of(this,
+                Injection.provideViewModelFactory(context!!)).get(ResetPassViewModel::class.java)
 
 
         resetToLoginBtn.setOnClickListener {
@@ -42,11 +44,11 @@ class ResetPassFragment : Fragment() {
         sendCodeBtn?.setOnClickListener {
             var email: String = resetPassEmail?.text.toString()
 
-            var isValidEmail : Boolean = viewModel.validator.validateEmail(resetPassEmail)
+            var isValidEmail : Boolean = resetPassViewModel.validator.validateEmail(resetPassEmail)
 
             if(isValidEmail){
                 codeProgressBar.visibility = View.VISIBLE
-                viewModel.sendPasswordRequest(email,{success ->
+                resetPassViewModel.sendPasswordRequest(email,{ success ->
                     codeProgressBar.visibility = View.GONE
                     Toast.makeText(context,"Code has been sent to your email",Toast.LENGTH_SHORT).show()
                     resetPassEmail.text?.clear()
@@ -83,11 +85,11 @@ class ResetPassFragment : Fragment() {
             val email = sharedPref?.getString(getString(R.string.email_file_key), defaultValue) ?: "empty"
 
 
-            var isValidPassword : Boolean = viewModel.validator.validatePassword(resetPassPw,resetPassPwConfirm)
+            var isValidPassword : Boolean = resetPassViewModel.validator.validatePassword(resetPassPw,resetPassPwConfirm)
 
             if(isValidPassword && email != "empty" ){
                 resetProgressBar.visibility = View.VISIBLE
-                viewModel.provideToken(code,email,password,{success ->
+                resetPassViewModel.provideToken(code,email,password,{ success ->
                     resetProgressBar.visibility = View.GONE
                     Toast.makeText(context,"Password updated",Toast.LENGTH_SHORT).show()
                     resetPassCode.text?.clear()
