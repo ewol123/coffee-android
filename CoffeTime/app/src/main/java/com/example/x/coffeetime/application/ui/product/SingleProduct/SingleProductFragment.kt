@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.opengl.Visibility
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -27,6 +29,7 @@ import kotlinx.android.synthetic.main.product_single_item_fragment.*
 class SingleProductFragment : Fragment() {
 
     private lateinit var singleViewModel: SingleProductViewModel
+    private val mHandler: Handler = Handler(Looper.getMainLooper())
 
     companion object {
         fun newInstance() = SingleProductFragment()
@@ -129,13 +132,31 @@ class SingleProductFragment : Fragment() {
         }
 
         removeProduct.setOnClickListener {
+            singleProductProgress.visibility = View.VISIBLE
             Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
-                singleViewModel.decreaseProduct(orderQuantityModel, token!!)
+                singleViewModel.decreaseProduct(orderQuantityModel, token!!, {success ->
+                    mHandler.post {
+                        singleProductProgress.visibility = View.GONE
+                    }
+                }, {error ->
+                    mHandler.post {
+                        singleProductProgress.visibility = View.GONE
+                    }
+                })
         }
 
         addProduct.setOnClickListener {
+            singleProductProgress.visibility = View.VISIBLE
             Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
-                singleViewModel.increaseProduct(orderQuantityModel, token!!)
+                singleViewModel.increaseProduct(orderQuantityModel, token!!, {success ->
+                    mHandler.post {
+                        singleProductProgress.visibility = View.GONE
+                    }
+                }, {error ->
+                    mHandler.post {
+                        singleProductProgress.visibility = View.GONE
+                    }
+                })
         }
     }
 

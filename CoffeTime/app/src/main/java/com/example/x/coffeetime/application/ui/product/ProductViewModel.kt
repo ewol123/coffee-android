@@ -5,6 +5,7 @@ import android.arch.lifecycle.*
 import android.arch.paging.PagedList
 import android.util.Log
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.AuthRepository
 import com.example.x.coffeetime.application.data.CoffeeRepository
@@ -47,5 +48,23 @@ class ProductViewModel(private val coffeeRepo: CoffeeRepository,
 
     fun lastQueryValue(): String? = queryLiveData.value
 
+    fun increaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+                        onSuccess: (success: String) -> Unit,
+                        onError: (error: String) -> Unit ){
+        cartRepo.increaseProduct({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },orderQuantityModel,token)
+    }
 
+    fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+                        onSuccess: (success: String) -> Unit,
+                        onError: (error: String) -> Unit){
+        cartRepo.decreaseProduct({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },orderQuantityModel,token)
+    }
 }

@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.AuthRepository
 
@@ -21,6 +22,28 @@ class CartViewModel(private val cartRepository: CartRepository,
             Log.d("CART_ERROR", error)
         },token)
     }
+
+    fun increaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+                        onSuccess: (success: String) -> Unit,
+                        onError: (error: String) -> Unit){
+        cartRepository.increaseProduct({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },orderQuantityModel,token)
+    }
+
+    fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+                        onSuccess: (success: String) -> Unit,
+                        onError: (error: String) -> Unit){
+        cartRepository.decreaseProduct({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },orderQuantityModel,token)
+    }
+
+
 
     val token = authRepo.token
     val cart = cartRepository.findOrders()

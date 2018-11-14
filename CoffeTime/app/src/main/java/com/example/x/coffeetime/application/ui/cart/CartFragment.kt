@@ -2,7 +2,10 @@ package com.example.x.coffeetime.application.ui.cart
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -13,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import kotlinx.android.synthetic.main.cart_fragment.*
 
@@ -24,15 +28,8 @@ class CartFragment : Fragment() {
 
     private lateinit var cartViewModel: CartViewModel
     private var totalPrice : Int = 0
-    private val adapter = CartAdapter(arrayListOf(),{cart ->
-        val bundle = Bundle()
-        bundle.putInt("coffeeId", cart.coffeeId)
-        findNavController().navigate(R.id.action_cart_to_SingleItem,bundle)
-    },{id ->
-        Log.d("Add product", id.toString())
-    }, {id ->
-        Log.d("Remove product", id.toString())
-    } )
+    private val mHandler: Handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,17 +41,57 @@ class CartFragment : Fragment() {
         cartViewModel = ViewModelProviders.of(this,
                 Injection.provideViewModelFactory(context!!)).get(CartViewModel::class.java)
 
+                val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+                val defaultValue = "coffeeshop123"
+                val barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
+                val token = sharedPref?.getString(getString(R.string.preference_token_key),defaultValue)
 
-        cartList.layoutManager =  LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+                cartViewModel.initCart(token!!)
 
-        cartList.adapter = adapter
+                var adapter = CartAdapter(arrayListOf(),{cart ->
+                    val bundle = Bundle()
+                    bundle.putInt("coffeeId", cart.coffeeId)
+                    findNavController().navigate(R.id.action_cart_to_SingleItem,bundle)
+                },{id ->
+                    Log.d("Add product", id.toString())
+                    cartProgress.visibility = View.VISIBLE
+                    var orderQuantityModel = OrderQuantityModel(
+                            TableNum = barcode!!,
+                            Quantity = "1",
+                            ProductId = id.toString())
+                    cartViewModel.increaseProduct(orderQuantityModel,  token, {success ->
+                        mHandler.post {
+                            cartProgress.visibility = View.GONE
+                        }
+                    }, {error ->
+                        mHandler.post {
+                            cartProgress.visibility = View.GONE
+                        }
+                    })
 
-        cartViewModel.token.observe(this, Observer{ token ->
-            if(token!!.isNotEmpty()){
-                Log.d("ORDER-TOKEN", token[0].token)
-                cartViewModel.initCart(token[0].token)
-            }
-        })
+                }, {id ->
+                    Log.d("Remove product", id.toString())
+                    cartProgress.visibility = View.VISIBLE
+                    var orderQuantityModel = OrderQuantityModel(
+                            TableNum = barcode!!,
+                            Quantity = "1",
+                            ProductId = id.toString())
+                    cartViewModel.decreaseProduct(orderQuantityModel, token, {success ->
+                        mHandler.post {
+                            cartProgress.visibility = View.GONE
+                        }
+                    }, {error ->
+                        mHandler.post {
+                            cartProgress.visibility = View.GONE
+                        }
+                    })
+
+                } )
+
+                cartList.layoutManager =  LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+                cartList.adapter = adapter
+
 
         cartViewModel.cart.observe(this, Observer<List<Cart>>{
 

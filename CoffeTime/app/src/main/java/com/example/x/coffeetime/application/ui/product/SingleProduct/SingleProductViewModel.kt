@@ -18,19 +18,25 @@ class SingleProductViewModel(private val coffeeRepository: CoffeeRepository, pri
         return coffeeRepository.coffeeById(id)
     }
 
-
-
     var cart : LiveData<List<Cart>> = cartRepo.findOrders()
 
-    fun increaseProduct(orderQuantityModel: OrderQuantityModel,token: String){
-        cartRepo.increaseProduct({_ ->
-        },{_ ->
+    fun increaseProduct(orderQuantityModel: OrderQuantityModel,token: String,
+                        onSuccess: (success: String) -> Unit,
+                        onError: (error: String) -> Unit){
+        cartRepo.increaseProduct({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
         },orderQuantityModel,token)
     }
 
-    fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String){
-        cartRepo.decreaseProduct({_ ->
-        },{_ ->
+    fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+                        onSuccess: (success: String) -> Unit,
+                        onError: (error: String) -> Unit ){
+        cartRepo.decreaseProduct({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
         },orderQuantityModel,token)
     }
 

@@ -7,6 +7,8 @@ import android.arch.paging.PagedList
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.util.Log
@@ -20,27 +22,14 @@ import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.model.Coffee
 import kotlinx.android.synthetic.main.product_fragment.*
 import android.support.v7.widget.LinearLayoutManager
+import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 
 
 class ProductFragment : Fragment() {
 
     private val CAMERA_REQUEST_CODE = 100
     private lateinit var productViewModel: ProductViewModel
-    var adapter = ProductAdapter({ coffee ->
-        Log.i("Coffee:", "$coffee clicked")
-
-        val bundle = Bundle()
-        bundle.putInt("coffeeId", coffee.coffeeId)
-
-
-        findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
-
-    }, {id ->
-        Log.i("Add product", id.toString())
-    }, {id ->
-        Log.i("Decrease product", id.toString())
-
-    })
+    private val mHandler: Handler = Handler(Looper.getMainLooper())
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,14 +44,10 @@ class ProductFragment : Fragment() {
         productViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(context!!))
                 .get(ProductViewModel::class.java)
 
-        observeCart()
-
         productViewModel.token.observe(this, Observer { token ->
             if(token!!.isEmpty()){
 
                findNavController().navigate(R.id.action_menu_to_login,null)
-
-
 
             } else if(token.isNotEmpty()) {
 
@@ -89,8 +74,53 @@ class ProductFragment : Fragment() {
 
                         val query = productViewModel.lastQueryValue() ?: DEFAULT_QUERY
                         productViewModel.searchCoffee(query)
-                        initAdapter()
-                        initSearch()
+
+                        val adapter = ProductAdapter({ coffee ->
+                            Log.i("Coffee:", "$coffee clicked")
+
+                            val bundle = Bundle()
+                            bundle.putInt("coffeeId", coffee.coffeeId)
+
+
+                            findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
+
+                        }, {id ->
+                            productProgress.visibility = View.VISIBLE
+                            var orderQuantityModel = OrderQuantityModel(
+                                    TableNum = barcode,
+                                    Quantity = "1",
+                                    ProductId = id.toString())
+                            productViewModel.increaseProduct(orderQuantityModel,token.get(0).token, {success ->
+                                mHandler.post {
+                                    productProgress.visibility = View.GONE
+                                }
+                            }, {error ->
+                                mHandler.post {
+                                    productProgress.visibility = View.GONE
+                                }
+                            })
+                        }, {id ->
+                            productProgress.visibility = View.VISIBLE
+                            var orderQuantityModel = OrderQuantityModel(
+                                    TableNum = barcode,
+                                    Quantity = "1",
+                                    ProductId = id.toString())
+                            productViewModel.decreaseProduct(orderQuantityModel,token.get(0).token, {success ->
+                                mHandler.post {
+                                    productProgress.visibility = View.GONE
+                                }
+
+
+                            }, {error ->
+                                mHandler.post {
+                                    productProgress.visibility = View.GONE
+                                }
+
+                            })
+                        })
+                        initAdapter(adapter)
+                        observeCart(adapter)
+                        initSearch(adapter)
 
                     } else {
                         scanButton?.visibility = View.GONE
@@ -107,6 +137,7 @@ class ProductFragment : Fragment() {
             }
         })
 
+
         scanButton?.setOnClickListener {
          setupPermissions()
         }
@@ -116,7 +147,7 @@ class ProductFragment : Fragment() {
         }
     }
 
-    private fun observeCart(){
+    private fun observeCart(adapter: ProductAdapter){
 
 
         productViewModel.cart.observe(this, Observer { cart ->
@@ -148,7 +179,7 @@ class ProductFragment : Fragment() {
     }
 
 
-    private fun initAdapter() {
+    private fun initAdapter(adapter: ProductAdapter) {
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
         productViewModel.coffees.observe(this, Observer<PagedList<Coffee>> {
@@ -163,12 +194,12 @@ class ProductFragment : Fragment() {
         })
     }
 
-    private fun initSearch() {
+    private fun initSearch(adapter: ProductAdapter) {
         search_coffee.setText(productViewModel.lastQueryValue())
 
         search_coffee.setOnEditorActionListener{ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
-                updateCoffeeListFromInput()
+                updateCoffeeListFromInput(adapter)
                 true
             } else {
                 false
@@ -176,7 +207,7 @@ class ProductFragment : Fragment() {
         }
         search_coffee.setOnKeyListener{ _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                updateCoffeeListFromInput()
+                updateCoffeeListFromInput(adapter)
                 true
             } else {
                 false
@@ -184,7 +215,7 @@ class ProductFragment : Fragment() {
         }
     }
 
-    private fun updateCoffeeListFromInput() {
+    private fun updateCoffeeListFromInput(adapter: ProductAdapter) {
         search_coffee.text.trim().let {
 
             list.scrollToPosition(0)
