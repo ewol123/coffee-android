@@ -129,6 +129,9 @@ class CartFragment : Fragment() {
             }
         })
 
+        cartButton.setOnClickListener {
+            findNavController().navigate(R.id.action_cart_to_checkout)
+        }
     }
 
 }

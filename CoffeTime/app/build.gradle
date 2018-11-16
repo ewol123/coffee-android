@@ -39,7 +39,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
     // architecture components
     implementation "android.arch.lifecycle:extensions:$archComponentsVersion"
     implementation "android.arch.lifecycle:runtime:$archComponentsVersion"
@@ -130,4 +129,7 @@ dependencies {
 
     // barcode scanner
     implementation 'com.github.bobekos:SimpleBarcodeScanner:1.0.19'
+
+    //paypal payment
+    implementation 'com.braintreepayments.api:drop-in:3.7.1'
 }
