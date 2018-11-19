@@ -56,5 +56,6 @@
     <string name="checkout_price_test">$27.99</string>
     <string name="pay_with_paypal">Pay with PayPal</string>
     <string name="tokenization_key">sandbox_dw398mmw_czrg5hprsvbkxws3</string>
+    <string name="cart">Cart</string>
 
 </resources>

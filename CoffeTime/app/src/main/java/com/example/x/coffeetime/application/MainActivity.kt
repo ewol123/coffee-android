@@ -101,6 +101,9 @@ class MainActivity : AppCompatActivity() {
                 "cart_fragment" ->{
                     toolbar?.title="Cart"
                 }
+                "checkout_fragment"->{
+                    toolbar?.title="Checkout"
+                }
 
             }
 

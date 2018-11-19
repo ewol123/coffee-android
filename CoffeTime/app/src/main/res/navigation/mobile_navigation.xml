@@ -66,6 +66,18 @@
         app:destination="@+id/loginFragment"
         />
 
+
+    <action
+        android:id="@+id/home"
+        app:destination="@+id/menuFragment"
+        />
+
+
+    <action
+        android:id="@+id/cart_menu"
+        app:destination="@+id/cartFragment"
+        />
+
     <action
         android:id="@+id/cart"
         app:destination="@+id/cartFragment"

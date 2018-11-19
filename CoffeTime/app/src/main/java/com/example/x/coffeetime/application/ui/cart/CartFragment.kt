@@ -86,6 +86,17 @@ class CartFragment : Fragment() {
                         }
                     })
 
+                }, {id ->
+                    cartProgress.visibility = View.VISIBLE
+                    cartViewModel.deleteProduct(id,token,{success ->
+                        mHandler.post{
+                            cartProgress.visibility = View.GONE
+                        }
+                    }, {error ->
+                        mHandler.post{
+                            cartProgress.visibility = View.GONE
+                        }
+                    })
                 } )
 
                 cartList.layoutManager =  LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)

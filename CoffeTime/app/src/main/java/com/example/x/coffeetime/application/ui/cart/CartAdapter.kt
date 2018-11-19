@@ -20,7 +20,8 @@ import kotlinx.android.synthetic.main.product_item.view.*
 class CartAdapter(cart: List<Cart>,
                   val listener: (Cart) -> Unit,
                   val addItem: (Int) -> Unit,
-                  val removeItem: (Int) -> Unit) : RecyclerView.Adapter<CartAdapter.RecyclerViewHolder>() {
+                  val removeItem: (Int) -> Unit,
+                  val deleteItem: (Int) ->Unit) : RecyclerView.Adapter<CartAdapter.RecyclerViewHolder>() {
 
     private var listCart: List<Cart> = cart
 
@@ -63,8 +64,12 @@ class CartAdapter(cart: List<Cart>,
             addItem(currentCart.coffeeId)
         }
 
-        holder.mfabRemoveProductCart.cartSubstractProduct.setOnClickListener {
+        holder.mfabRemoveProductCart.setOnClickListener {
             removeItem(currentCart.coffeeId)
+        }
+
+        holder.mDeleteCartButton.setOnClickListener {
+            deleteItem(currentCart.id)
         }
 
     }
@@ -84,7 +89,7 @@ class CartAdapter(cart: List<Cart>,
         var mfabAddProductCart = itemView.findViewById<FloatingActionButton>(R.id.cartAddProduct)!!
         var mfabRemoveProductCart = itemView.findViewById<FloatingActionButton>(R.id.cartSubstractProduct)!!
         var mCartFavButton = itemView.findViewById<ImageButton>(R.id.cartFavButton)!!
-
+        var mDeleteCartButton = itemView.findViewById<ImageButton>(R.id.deleteProduct)!!
     }
 
 }

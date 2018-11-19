@@ -43,6 +43,14 @@ class CartViewModel(private val cartRepository: CartRepository,
         },orderQuantityModel,token)
     }
 
+    fun deleteProduct(id: Int,token:String, onSuccess: (success: String ) -> Unit, onError: (error:String) -> Unit){
+        cartRepository.deleteProduct({success ->
+            onSuccess(success)
+        }, {error ->
+            onError(error)
+        },id,token)
+    }
+
 
 
     val token = authRepo.token
