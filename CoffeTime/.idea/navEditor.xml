@@ -60,6 +60,11 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="cart_menu">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="checkoutFragment">
                     <value>
                       <LayoutPositions>
@@ -69,7 +74,21 @@
                             <option name="y" value="392" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_checkout_to_menu">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="home">
+                    <value>
+                      <LayoutPositions />
                     </value>
                   </entry>
                   <entry key="loginFragment">

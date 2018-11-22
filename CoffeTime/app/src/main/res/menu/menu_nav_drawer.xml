@@ -6,15 +6,19 @@
             android:id="@+id/home"
             android:icon="@drawable/ic_local_cafe_white_24dp"
             android:title="@string/home" />
-
         <item
             android:id="@+id/cart_menu"
             android:icon="@drawable/ic_shopping_cart_white"
             android:title="@string/cart" />
         <item
+            android:id="@+id/favorite"
+            android:icon="@drawable/ic_star_white_24dp"
+            android:title="@string/favorites" />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/ic__ionicons_svg_md_exit"
             android:title="@string/logout" />
+
 
     </group>
 

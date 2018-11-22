@@ -29,71 +29,70 @@ private const val CLIENT_ID = "5bd1d38ccf7a428ab3b963ac8bd1e4de"
 
 class ApiService {
 
-fun requestAuth(
-        service: MainService,
-        username: String,
-        password: String,
-        onSuccess: (token: String) -> Unit,
-        onError: (error: String) -> Unit) {
+    fun requestAuth(
+            service: MainService,
+            username: String,
+            password: String,
+            onSuccess: (token: String) -> Unit,
+            onError: (error: String) -> Unit) {
 
 
-
-    service.requestAuth(username,password,"password",CLIENT_ID).enqueue(
-            object : Callback<TokenResponse> {
-                override fun onFailure(call: Call<TokenResponse>?, t: Throwable) {
-                    Log.d(TAG, "fail to get data")
-                    onError(t.message ?: "unknown error")
-                }
-
-                override fun onResponse(
-                        call: Call<TokenResponse>?,
-                        response: Response<TokenResponse>
-                ) {
-                    Log.d(TAG, "got a response $response")
-                    if (response.isSuccessful) {
-
-                        val token = response.body()?.token ?: ""
-                        onSuccess(token)
-                    } else {
-                        onError(response.errorBody()?.string() ?: "Unknown error")
-                    }
-                }
-            }
-    )
-}
-
-fun register(
-        service: MainService,
-        createuserModel: CreateUserModel,
-        onSuccess: (success: String) -> Unit,
-        onError: (error: String) -> Unit
-        ){
-
-     if(createuserModel.Password != createuserModel.ConfirmPassword){
-         onError("Passwords does not match")
-         return
-     }
-
-    service.register(createuserModel).enqueue(
-            object: Callback<Void> {
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d(TAG, "fail to get data")
-                    onError(t.message ?: "unknown error")
-                }
-
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    Log.d(TAG, "got a response $response")
-                    if (response.isSuccessful) {
-
-                        onSuccess(response.message() ?: "unknown error")
-                    } else {
-                        onError(response.errorBody()?.string() ?: "Unknown error")
+        service.requestAuth(username, password, "password", CLIENT_ID).enqueue(
+                object : Callback<TokenResponse> {
+                    override fun onFailure(call: Call<TokenResponse>?, t: Throwable) {
+                        Log.d(TAG, "fail to get data")
+                        onError(t.message ?: "unknown error")
                     }
 
+                    override fun onResponse(
+                            call: Call<TokenResponse>?,
+                            response: Response<TokenResponse>
+                    ) {
+                        Log.d(TAG, "got a response $response")
+                        if (response.isSuccessful) {
+
+                            val token = response.body()?.token ?: ""
+                            onSuccess(token)
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
                 }
-            }
-    )
-}
+        )
+    }
+
+    fun register(
+            service: MainService,
+            createuserModel: CreateUserModel,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit
+    ) {
+
+        if (createuserModel.Password != createuserModel.ConfirmPassword) {
+            onError("Passwords does not match")
+            return
+        }
+
+        service.register(createuserModel).enqueue(
+                object : Callback<Void> {
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Log.d(TAG, "fail to get data")
+                        onError(t.message ?: "unknown error")
+                    }
+
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        Log.d(TAG, "got a response $response")
+                        if (response.isSuccessful) {
+
+                            onSuccess(response.message() ?: "unknown error")
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+
+                    }
+                }
+        )
+    }
 
     fun searchCoffees(
             service: MainService,
@@ -106,11 +105,11 @@ fun register(
 
         var queryString = ""
 
-        if(query == "") queryString = "all"
+        if (query == "") queryString = "all"
         else queryString = query
 
 
-        service.searchCoffees(page,itemsPerPage,queryString ).enqueue(
+        service.searchCoffees(page, itemsPerPage, queryString).enqueue(
                 object : Callback<List<Coffee>> {
                     override fun onFailure(call: Call<List<Coffee>>?, t: Throwable) {
                         Log.d(TAG, "fail to get data")
@@ -124,7 +123,7 @@ fun register(
                         Log.d(TAG, "got a response $response")
                         if (response.isSuccessful) {
                             val coffees = response.body() ?: emptyList()
-                            Log.d("coffees",coffees.toString())
+                            Log.d("coffees", coffees.toString())
                             onSuccess(coffees)
                         } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
@@ -155,7 +154,7 @@ fun register(
                         Log.d(TAG, "got a response $response")
                         if (response.isSuccessful) {
                             val orders = response.body() ?: emptyList()
-                            Log.d("orders",orders.toString())
+                            Log.d("orders", orders.toString())
                             onSuccess(orders)
                         } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
@@ -174,15 +173,14 @@ fun register(
         service.sendPasswordReset(email).enqueue(
                 object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
-                        onError(t.message?: "unknown error")
+                        onError(t.message ?: "unknown error")
                     }
 
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
 
-                        if(response.isSuccessful){
+                        if (response.isSuccessful) {
                             onSuccess("Token sent")
-                        }
-                        else {
+                        } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
                         }
                     }
@@ -198,17 +196,16 @@ fun register(
             onSuccess: (success: String) -> Unit,
             onError: (error: String) -> Unit) {
 
-        service.provideToken(token,email,newPass).enqueue(
+        service.provideToken(token, email, newPass).enqueue(
                 object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        onError(t.message?: "unknown error")
+                        onError(t.message ?: "unknown error")
                     }
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if(response.isSuccessful){
-                            onSuccess(response.body() ?:"Password changed")
-                        }
-                        else {
+                        if (response.isSuccessful) {
+                            onSuccess(response.body() ?: "Password changed")
+                        } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
                         }
                     }
@@ -223,17 +220,16 @@ fun register(
             onSuccess: (success: String) -> Unit,
             onError: (error: String) -> Unit) {
 
-        service.increaseProduct("Bearer $token",orderQuantityModel).enqueue(
+        service.increaseProduct("Bearer $token", orderQuantityModel).enqueue(
                 object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        onError(t.message?: "unknown error")
+                        onError(t.message ?: "unknown error")
                     }
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if(response.isSuccessful){
-                            onSuccess(response.body() ?:"changed")
-                        }
-                        else {
+                        if (response.isSuccessful) {
+                            onSuccess(response.body() ?: "changed")
+                        } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
                         }
                     }
@@ -248,17 +244,16 @@ fun register(
             onSuccess: (success: String) -> Unit,
             onError: (error: String) -> Unit) {
 
-        service.decreaseProduct("Bearer $token",orderQuantityModel).enqueue(
+        service.decreaseProduct("Bearer $token", orderQuantityModel).enqueue(
                 object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        onError(t.message?: "unknown error")
+                        onError(t.message ?: "unknown error")
                     }
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if(response.isSuccessful){
-                            onSuccess(response.body() ?:"changed")
-                        }
-                        else {
+                        if (response.isSuccessful) {
+                            onSuccess(response.body() ?: "changed")
+                        } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
                         }
                     }
@@ -273,19 +268,45 @@ fun register(
             onSuccess: (success: String) -> Unit,
             onError: (error: String) -> Unit) {
 
-        service.deleteProduct("Bearer $token",id).enqueue(
+        service.deleteProduct("Bearer $token", id).enqueue(
                 object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        onError(t.message?: "unknown error")
+                        onError(t.message ?: "unknown error")
                     }
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-                        if(response.isSuccessful){
-                            onSuccess(response.body() ?:"deleted")
-                        }
-                        else {
+                        if (response.isSuccessful) {
+                            onSuccess(response.body() ?: "deleted")
+                        } else {
                             onError(response.errorBody()?.string() ?: "Unknown error")
                         }
+                    }
+                }
+        )
+    }
+
+    fun updateOrder(
+            service: MainService,
+            token: String,
+            paymentMethod: String,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit) {
+        service.updateOrder("Bearer $token", paymentMethod).enqueue(
+                object : Callback<String> {
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+
+                        onError(t.message ?: "unknown error")
+
+                    }
+
+
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.isSuccessful) {
+                            onSuccess(response.body() ?: "Order Successful")
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+
                     }
                 }
         )
@@ -357,8 +378,16 @@ interface MainService {
             @Query("id") id: Int
     ): Call<String>
 
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @PUT("api/orders/updateOrder")
+    fun updateOrder(
+            @Header("Authorization") token: String,
+            @Query("paymentMethod") paymentMethod: String
+    ): Call<String>
+
+
     companion object {
-        private const val BASE_URL ="http://coffeedeville.azurewebsites.net"
+        private const val BASE_URL ="http://192.168.1.106:5819"
 
 
         fun create(): MainService {

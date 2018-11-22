@@ -92,9 +92,19 @@ class CartRepository(
         })
     }
 
-
-
-
+    fun updateOrder(onSuccess: (success: String) -> Unit,
+                      onError: (error: String) -> Unit,
+                      paymentMethod:String,
+                      token:String){
+        apiService.updateOrder(service,token,paymentMethod,{success ->
+            getCart({_->
+            },{_ ->
+            },token)
+            onSuccess(success)
+        }, {error ->
+            onError(error)
+        })
+    }
 
 
 

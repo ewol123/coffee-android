@@ -16,4 +16,16 @@ class CheckoutViewModel(private val cartRepository: CartRepository,
     val token = authRepo.token
     val cart = cartRepository.findOrders()
 
+    fun updateOrder(onSuccess: (success: String) -> Unit,
+                    onError: (error: String) -> Unit,
+                    paymentMethod:String,
+                    token:String){
+        cartRepository.updateOrder({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },paymentMethod,token)
+    }
+
+
 }
