@@ -104,6 +104,9 @@ class MainActivity : AppCompatActivity() {
                 "checkout_fragment"->{
                     toolbar?.title="Checkout"
                 }
+                "favorite_fragment"->{
+                    toolbar?.title="Favorites"
+                }
 
             }
 

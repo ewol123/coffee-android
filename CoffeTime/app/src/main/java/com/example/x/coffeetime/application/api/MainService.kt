@@ -385,6 +385,34 @@ interface MainService {
             @Query("paymentMethod") paymentMethod: String
     ): Call<String>
 
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @POST("api/favorite/addFavorite")
+    fun addFavorite(
+            @Header("Authorization") token: String,
+            @Query("id") id: Int
+    ): Call<Void>
+
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @DELETE("api/favorite/deleteFavorite")
+    fun deleteFavorite(
+            @Header("Authorization") token: String,
+            @Query("id") id: Int
+    ): Call<Void>
+
+
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @GET("api/favorite/isFavorite")
+    fun isFavorite(
+            @Header("Authorization") token: String,
+            @Query("id") id: Int
+    ): Call<Boolean>
+
+    @Headers("Accept: application/json", "Content-Type: application/json")
+    @POST("api/favorite/getFavorites")
+    fun getFavorites(
+            @Header("Authorization") token: String
+    ): Call<List<Coffee>>
+
 
     companion object {
         private const val BASE_URL ="http://192.168.1.106:5819"

@@ -33,19 +33,16 @@ class ProductAdapter(val listener: (Coffee) -> Unit,
 
 
             holder.itemView.fabSubstractProduct.hide()
-            holder.itemView.coffee_item_quantity.visibility = View.GONE
-            holder.itemView.coffee_item_total_price.visibility = View.GONE
+            holder.itemView.coffee_item_quantity.text = "Quantity: 0"
+            holder.itemView.coffee_item_total_price.text = "in cart: $0"
 
             if(cart.isNotEmpty()){
                 var cartItem = cart.find { item -> item.name == coffeeItem.name }
 
                 if(cartItem !=null ){
                 holder.itemView.fabSubstractProduct.show()
-                holder.itemView.coffee_item_quantity.visibility = View.VISIBLE
-                holder.itemView.coffee_item_total_price.visibility = View.VISIBLE
-
                 holder.itemView.coffee_item_quantity.text = "Quantity: ${cartItem.quantity}"
-                holder.itemView.coffee_item_total_price.text = "$ ${cartItem.totalPrice}"
+                holder.itemView.coffee_item_total_price.text = "in cart: $${cartItem.totalPrice}"
                 }
             }
 

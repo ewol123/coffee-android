@@ -88,7 +88,6 @@ class CartAdapter(cart: List<Cart>,
         var mCoffeeQuantity = itemView.findViewById<TextView>(R.id.cart_coffee_quantity)!!
         var mfabAddProductCart = itemView.findViewById<FloatingActionButton>(R.id.cartAddProduct)!!
         var mfabRemoveProductCart = itemView.findViewById<FloatingActionButton>(R.id.cartSubstractProduct)!!
-        var mCartFavButton = itemView.findViewById<ImageButton>(R.id.cartFavButton)!!
         var mDeleteCartButton = itemView.findViewById<ImageButton>(R.id.deleteProduct)!!
     }
 
