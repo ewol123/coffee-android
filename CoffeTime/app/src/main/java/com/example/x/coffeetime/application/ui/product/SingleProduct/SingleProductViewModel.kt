@@ -8,10 +8,13 @@ import android.widget.TextView
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.CoffeeRepository
+import com.example.x.coffeetime.application.data.FavoriteRepository
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 
-class SingleProductViewModel(private val coffeeRepository: CoffeeRepository, private val cartRepo: CartRepository) : ViewModel() {
+class SingleProductViewModel(private val coffeeRepository: CoffeeRepository,
+                             private val cartRepo: CartRepository,
+                             private val favoriteRepo: FavoriteRepository) : ViewModel() {
 
 
     fun coffeeById(id: Int) : LiveData<List<Coffee>>  {
@@ -40,6 +43,29 @@ class SingleProductViewModel(private val coffeeRepository: CoffeeRepository, pri
         },orderQuantityModel,token)
     }
 
+
+
+    fun addFavorite(id:Int, token: String,
+                    onSuccess: (success: String) -> Unit,
+                    onError: (error: String) -> Unit){
+        favoriteRepo.addFavorite({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },id,token)
+    }
+
+    fun deleteFavorite(id:Int, token: String,
+                       onSuccess: (success: String) -> Unit,
+                       onError: (error: String) -> Unit){
+        favoriteRepo.deleteFavorite({success ->
+            onSuccess(success)
+        },{error ->
+            onError(error)
+        },id,token)
+    }
+
+    val favorites = favoriteRepo.findFavorites()
 
 
 

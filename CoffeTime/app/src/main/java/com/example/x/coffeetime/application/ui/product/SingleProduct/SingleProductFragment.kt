@@ -82,8 +82,58 @@ class SingleProductFragment : Fragment() {
                 }
             })
         }
-    }
 
+
+        singleViewModel.favorites.observe(this,Observer{favorites ->
+            if(favorites!!.isEmpty()){
+                removeFav.visibility = View.GONE
+                addFav.visibility = View.VISIBLE
+
+            }
+            else if(favorites!!.isNotEmpty()){
+                var favoriteItem = favorites.find { favorite -> favorite.id == coffeeId }
+
+                if(favoriteItem != null){
+                    removeFav.visibility = View.VISIBLE
+                    addFav.visibility = View.GONE
+                } else {
+                    removeFav.visibility = View.GONE
+                    addFav.visibility = View.VISIBLE
+                }
+
+
+            }
+        })
+
+        addFav.setOnClickListener {
+            singleProductProgress.visibility = View.VISIBLE
+
+            singleViewModel.addFavorite(coffeeId,token!!,{success ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+
+            }, {error ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+            })
+        }
+        removeFav.setOnClickListener {
+            singleProductProgress.visibility = View.VISIBLE
+
+            singleViewModel.deleteFavorite(coffeeId,token!!,{success ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+            }, {error ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+            })
+        }
+
+    }
 
     private fun initDetails(coffee: List<Coffee>) {
         Picasso.get()

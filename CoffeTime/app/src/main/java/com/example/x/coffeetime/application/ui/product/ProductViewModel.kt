@@ -9,6 +9,7 @@ import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.AuthRepository
 import com.example.x.coffeetime.application.data.CoffeeRepository
+import com.example.x.coffeetime.application.data.FavoriteRepository
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 import com.example.x.coffeetime.application.model.CoffeeSearchResult
@@ -16,8 +17,18 @@ import com.example.x.coffeetime.application.model.Token
 
 class ProductViewModel(private val coffeeRepo: CoffeeRepository,
                        private val cartRepo: CartRepository,
-                       private val authRepo: AuthRepository) : ViewModel() {
+                       private val authRepo: AuthRepository,
+                       private val favoriteRepo: FavoriteRepository) : ViewModel() {
 
+
+    fun initFavorites(token : String){
+
+        favoriteRepo.getFavorites({success ->
+            Log.d("CART_SUCCESS", success)
+        }, {error ->
+            Log.d("CART_ERROR", error)
+        },token)
+    }
 
     fun getCart(token : String){
 

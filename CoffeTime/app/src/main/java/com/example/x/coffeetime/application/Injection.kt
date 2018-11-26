@@ -8,9 +8,11 @@ import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.CoffeeRepository
 import com.example.x.coffeetime.application.data.AuthRepository
+import com.example.x.coffeetime.application.data.FavoriteRepository
 import com.example.x.coffeetime.application.db.CoffeeLocalCache
 import com.example.x.coffeetime.application.db.AppDatabase
 import com.example.x.coffeetime.application.db.CartLocalCache
+import com.example.x.coffeetime.application.db.FavoriteLocalCache
 import java.util.concurrent.Executors
 
 
@@ -21,7 +23,7 @@ import java.util.concurrent.Executors
  */
 object Injection {
 
-     fun provideContext(application: Application): Context {
+    private fun provideContext(application: Application): Context {
         return application
     }
 
@@ -37,7 +39,6 @@ object Injection {
     private fun provideCartCache(context: Context): CartLocalCache {
         val database = AppDatabase.getInstance(context)
         return CartLocalCache(database.cartDao(),Executors.newSingleThreadExecutor())
-
     }
     private fun provideCartRepository(context: Context): CartRepository{
         return CartRepository(MainService.create(), ApiService(), provideCartCache(context))
@@ -48,8 +49,19 @@ object Injection {
         return AuthRepository(ApiService(), MainService.create(),database.tokenDao(), Executors.newSingleThreadExecutor())
     }
 
+    private fun provideFavoriteCache(context:Context): FavoriteLocalCache {
+        val database = AppDatabase.getInstance(context)
+        return FavoriteLocalCache(database.favoriteDao(),Executors.newSingleThreadExecutor())
+    }
+    private fun provideFavoriteRepository(context: Context): FavoriteRepository{
+        return FavoriteRepository(MainService.create(), ApiService(),provideFavoriteCache(context))
+    }
+
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
-        return ViewModelFactory(provideCoffeeRepository(context), provideCartRepository(context), provideAuthRepository())
+        return ViewModelFactory(provideCoffeeRepository(context),
+                provideCartRepository(context),
+                provideAuthRepository(),
+                provideFavoriteRepository(context))
     }
 
 }

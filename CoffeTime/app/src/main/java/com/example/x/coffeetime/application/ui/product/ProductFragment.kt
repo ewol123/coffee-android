@@ -52,7 +52,7 @@ class ProductFragment : Fragment() {
             } else if(token.isNotEmpty()) {
 
                saveToken(token.get(0).token)
-
+                productViewModel.initFavorites(token.get(0).token)
                 productViewModel.getCart(token.get(0).token)
 
                 Log.d("ez a token", token.get(0).token)

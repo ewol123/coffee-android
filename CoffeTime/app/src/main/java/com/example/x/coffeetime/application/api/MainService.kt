@@ -21,6 +21,7 @@ import android.content.SharedPreferences
 import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
+import com.example.x.coffeetime.application.model.Favorite
 import com.example.x.coffeetime.application.model.Token
 
 
@@ -312,6 +313,99 @@ class ApiService {
         )
     }
 
+    fun addFavorite(
+            service: MainService,
+            id: Int,
+            token: String,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit
+            ) {
+
+
+        service.addFavorite("Bearer $token",id).enqueue(
+                object : Callback<Void> {
+                    override fun onFailure(call: Call<Void>?, t: Throwable) {
+                        Log.d(TAG, "fail to get data")
+                        onError(t.message ?: "unknown error")
+                    }
+
+                    override fun onResponse(
+                            call: Call<Void>?,
+                            response: Response<Void>
+                    ) {
+                        Log.d(TAG, "got a response $response")
+                        if (response.isSuccessful) {
+                            onSuccess("Added to favorites")
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+    fun deleteFavorite(
+            service: MainService,
+            id: Int,
+            token: String,
+            onSuccess: (success: String) -> Unit,
+            onError: (error: String) -> Unit
+           ) {
+
+
+        service.deleteFavorite("Bearer $token",id).enqueue(
+                object : Callback<Void> {
+                    override fun onFailure(call: Call<Void>?, t: Throwable) {
+                        Log.d(TAG, "fail to get data")
+                        onError(t.message ?: "unknown error")
+                    }
+
+                    override fun onResponse(
+                            call: Call<Void>?,
+                            response: Response<Void>
+                    ) {
+                        Log.d(TAG, "got a response $response")
+                        if (response.isSuccessful) {
+                            onSuccess("Deleted from favorites")
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+
+    fun getFavorites(
+            service: MainService,
+            onSuccess: (success: List<Favorite>) -> Unit,
+            onError: (error: String) -> Unit,
+            token: String) {
+        service.getFavorites("Bearer $token").enqueue(
+                object : Callback<List<Favorite>> {
+                    override fun onFailure(call: Call<List<Favorite>>?, t: Throwable) {
+                        Log.d(TAG, "fail to get data")
+                        onError(t.message ?: "unknown error")
+                    }
+
+                    override fun onResponse(
+                            call: Call<List<Favorite>>?,
+                            response: Response<List<Favorite>>
+                    ) {
+                        Log.d(TAG, "got a response $response")
+                        if (response.isSuccessful) {
+                            val favorites = response.body() ?: emptyList()
+                            Log.d("orders", favorites.toString())
+                            onSuccess(favorites)
+                        } else {
+                            onError(response.errorBody()?.string() ?: "Unknown error")
+                        }
+                    }
+                }
+        )
+    }
+
+
 }
 
 
@@ -401,21 +495,14 @@ interface MainService {
 
 
     @Headers("Accept: application/json", "Content-Type: application/json")
-    @GET("api/favorite/isFavorite")
-    fun isFavorite(
-            @Header("Authorization") token: String,
-            @Query("id") id: Int
-    ): Call<Boolean>
-
-    @Headers("Accept: application/json", "Content-Type: application/json")
-    @POST("api/favorite/getFavorites")
+    @GET("api/favorite/getFavorites")
     fun getFavorites(
             @Header("Authorization") token: String
-    ): Call<List<Coffee>>
+    ): Call<List<Favorite>>
 
 
     companion object {
-        private const val BASE_URL ="http://192.168.1.106:5819"
+        private const val BASE_URL ="http://192.168.1.103:5819"
 
 
         fun create(): MainService {
