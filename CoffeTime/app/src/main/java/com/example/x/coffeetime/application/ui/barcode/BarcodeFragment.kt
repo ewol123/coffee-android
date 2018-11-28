@@ -1,9 +1,7 @@
 package com.example.x.coffeetime.application.ui.barcode
 
-import android.Manifest
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -13,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import io.reactivex.disposables.Disposable
-import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.widget.Toast
 import io.reactivex.android.schedulers.AndroidSchedulers

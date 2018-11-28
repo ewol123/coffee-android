@@ -1,51 +1,27 @@
 package com.example.x.coffeetime.application
 
-import android.Manifest
 import android.content.res.Resources
-import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import butterknife.BindView
 import com.example.x.coffeetime.R
-import com.example.x.coffeetime.application.ui.login.LoginFragment
-import android.support.v4.app.ActivityCompat.requestPermissions
-import android.Manifest.permission
-import android.Manifest.permission.READ_CONTACTS
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import android.support.v4.app.ActivityCompat
 import butterknife.ButterKnife
+import kotlinx.android.synthetic.main.main_activity.*
 
 
 class MainActivity : AppCompatActivity() {
-
-    @JvmField
-    @BindView(R.id.container)
-    var drawerLayout: DrawerLayout? = null
-
-    @JvmField
-    @BindView(R.id.toolbar)
-    var toolbar: Toolbar? = null
-
-    @JvmField
-    @BindView(R.id.nav_view)
-    var navigationView: NavigationView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,12 +57,12 @@ class MainActivity : AppCompatActivity() {
                 "menu_fragment" -> {
                     toolbar?.title = "Menu"
                     toolbar?.visibility = View.VISIBLE
-                    drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                    container?.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
 
                 }
                 "login_fragment" -> {
                     toolbar?.visibility = View.GONE
-                    drawerLayout?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    container?.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
                 }
                 "barcode_fragment" -> {
@@ -120,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setupNavigationMenu(navController: NavController) {
-        navigationView?. let { navigationView ->
+        nav_view?. let { navigationView ->
             NavigationUI.setupWithNavController(navigationView, navController)
         }
     }
@@ -129,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         val retValue = super.onCreateOptionsMenu(menu)
         // The NavigationView already has these same navigation items, so we only add
         // navigation items to the menu here if there isn't a NavigationView
-        if (navigationView == null) {
+        if (nav_view == null) {
             menuInflater.inflate(R.menu.menu_nav_drawer, menu)
             return true
         }
@@ -149,13 +125,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setupActionBar(navController: NavController) {
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+        NavigationUI.setupActionBarWithNavController(this, navController, container)
     }
 
 
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(drawerLayout,
+        return NavigationUI.navigateUp(container,
                 Navigation.findNavController(this, R.id.my_nav_host_fragment))
     }
 
