@@ -194,7 +194,18 @@
         android:id="@+id/favoriteFragment"
         android:name="com.example.x.coffeetime.application.ui.favorite.FavoriteFragment"
         android:label="favorite_fragment"
-        tools:layout="@layout/favorite_fragment" />
+        tools:layout="@layout/favorite_fragment">
+
+        <action
+            android:id="@+id/action_fav_to_single"
+            app:destination="@id/productSingleItem"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            />
+
+        </fragment>
 
 
 </navigation>

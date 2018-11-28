@@ -52,7 +52,7 @@ class ViewModelFactory(private val coffeeRepo: CoffeeRepository,
         }
         else if(modelClass.isAssignableFrom(FavoriteViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
-            return FavoriteViewModel(favoriteRepo) as T
+            return FavoriteViewModel(favoriteRepo,cartRepo) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

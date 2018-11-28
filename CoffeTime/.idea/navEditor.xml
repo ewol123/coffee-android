@@ -86,6 +86,11 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="favorite">
+                    <value>
+                      <LayoutPositions />
+                    </value>
+                  </entry>
                   <entry key="favoriteFragment">
                     <value>
                       <LayoutPositions>

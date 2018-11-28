@@ -18,71 +18,78 @@
         android:layout_height="wrap_content"
         >
 
-    <ImageView
-        android:id="@+id/coffee_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="8dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-         />
+
+
+        <ImageButton
+            android:id="@+id/favRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_star_orange_filled_40dp" />
+
+
+
+        <ImageView
+            android:id="@+id/fav_c_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <TextView
-            android:id="@+id/coffee_name"
+            android:id="@+id/fav_c_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/coffee_image"
+            app:layout_constraintStart_toEndOf="@+id/fav_c_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/coffee_price"
+            android:id="@+id/fav_c_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/coffee_image"
-            app:layout_constraintTop_toBottomOf="@+id/coffee_name" />
+            app:layout_constraintStart_toEndOf="@+id/fav_c_image"
+            app:layout_constraintTop_toBottomOf="@+id/fav_c_name" />
 
         <TextView
-            android:id="@+id/coffee_item_total_price"
+            android:id="@+id/fav_c_total_price"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/test_total_price"
             android:textSize="25sp"
             android:textStyle="bold"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/coffee_image"
-            app:layout_constraintTop_toBottomOf="@+id/coffee_price" />
+            app:layout_constraintStart_toEndOf="@+id/fav_c_image"
+            app:layout_constraintTop_toBottomOf="@+id/fav_c_price" />
 
         <TextView
-            android:id="@+id/coffee_item_quantity"
+            android:id="@+id/fav_c_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/test_quantity"
             android:textSize="18sp"
             android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/coffee_image"
-            app:layout_constraintTop_toBottomOf="@+id/coffee_item_total_price" />
+            app:layout_constraintStart_toEndOf="@+id/fav_c_image"
+            app:layout_constraintTop_toBottomOf="@+id/fav_c_total_price" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAddProduct"
+            android:id="@+id/favProductAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
@@ -92,12 +99,12 @@
             app:fabSize="mini"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/coffee_image"
+            app:layout_constraintTop_toBottomOf="@+id/fav_c_image"
             app:layout_constraintVertical_bias="0.0" />
 
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabSubstractProduct"
+            android:id="@+id/favProductRemove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
