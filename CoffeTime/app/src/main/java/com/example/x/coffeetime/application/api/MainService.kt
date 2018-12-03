@@ -13,20 +13,18 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
-import android.R.id.edit
-import android.app.Application
-import android.arch.lifecycle.LiveData
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
-import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Favorite
-import com.example.x.coffeetime.application.model.Token
-
+import kotlinx.serialization.Optional
+import kotlinx.serialization.json.JSON
+import kotlinx.serialization.Serializable
 
 private const val TAG = "MainService"
 private const val CLIENT_ID = "5bd1d38ccf7a428ab3b963ac8bd1e4de"
+
+@Serializable
+data class Data(val error: String,  val error_description: String)
 
 class ApiService {
 
@@ -55,7 +53,9 @@ class ApiService {
                             val token = response.body()?.token ?: ""
                             onSuccess(token)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            val obj = JSON.parse(Data.serializer(), response.errorBody()?.string()!!)
+
+                            onError(obj.error_description)
                         }
                     }
                 }
