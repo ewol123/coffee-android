@@ -234,7 +234,7 @@ class ProductFragment : Fragment() {
      */
     private fun updateCoffeeListFromInput(adapter: ProductAdapter) {
         search_coffee.text.trim().let {
-           // list.scrollToPosition(0)
+            list.scrollToPosition(0)
             productViewModel.searchCoffee(it.toString())
             adapter.submitList(null)
         }
