@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
@@ -54,27 +55,28 @@ class FavoriteFragment : Fragment() {
 
     private fun initAdapter(token:String?,barcode:String?){
         adapter = FavoriteAdapter ({
-            // go to singel item
             val bundle = Bundle()
             bundle.putInt("coffeeId", it.id)
             findNavController().navigate(R.id.action_fav_to_single, bundle)
-        },{
+        }, {
             //add
+            if(barcode != "coffeeshop123"){
             favoriteProgress.visibility = View.VISIBLE
-            favoriteViewModel.increaseProduct(provideOrderQuantity(token,it.toString()),token!!, {success ->
+            favoriteViewModel.increaseProduct(provideOrderQuantity(barcode, it.toString()), token!!, { success ->
                 mHandler.post {
                     favoriteProgress.visibility = View.GONE
                 }
-            }, {error ->
+            }, { error ->
                 mHandler.post {
                     favoriteProgress.visibility = View.GONE
                 }
             })
+        } else Toast.makeText(context,"Please scan your table",Toast.LENGTH_SHORT).show()
         },{
             //delete
             favoriteProgress.visibility = View.VISIBLE
 
-            favoriteViewModel.decreaseProduct(provideOrderQuantity(token,it.toString()),token!!, {success ->
+            favoriteViewModel.decreaseProduct(provideOrderQuantity(barcode,it.toString()),token!!, {success ->
                 mHandler.post {
                     favoriteProgress.visibility = View.GONE
                 }
