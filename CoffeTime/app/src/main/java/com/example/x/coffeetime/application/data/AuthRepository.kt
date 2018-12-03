@@ -12,9 +12,6 @@ import com.example.x.coffeetime.application.model.Token
 import java.util.concurrent.Executor
 
 
-/**
- * Repository class that works with local and remote data sources.
- */
 class AuthRepository(
         private val ApiService: ApiService,
         private val mainService: MainService,

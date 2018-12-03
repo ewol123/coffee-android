@@ -1,5 +1,6 @@
 package com.example.x.coffeetime.application.ui.cart
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -16,20 +17,17 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.Injection.provideOrderQuantity
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import kotlinx.android.synthetic.main.cart_fragment.*
 
 class CartFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = CartFragment()
-    }
-
     private lateinit var cartViewModel: CartViewModel
     private var totalPrice : Int = 0
     private val mHandler: Handler = Handler(Looper.getMainLooper())
-
+    private lateinit var adapter: CartAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,62 +46,75 @@ class CartFragment : Fragment() {
 
                 cartViewModel.initCart(token!!)
 
-                var adapter = CartAdapter(arrayListOf(),{cart ->
-                    val bundle = Bundle()
-                    bundle.putInt("coffeeId", cart.coffeeId)
-                    findNavController().navigate(R.id.action_cart_to_SingleItem,bundle)
-                },{id ->
-                    Log.d("Add product", id.toString())
-                    cartProgress.visibility = View.VISIBLE
-                    var orderQuantityModel = OrderQuantityModel(
-                            TableNum = barcode!!,
-                            Quantity = "1",
-                            ProductId = id.toString())
-                    cartViewModel.increaseProduct(orderQuantityModel,  token, {success ->
-                        mHandler.post {
-                            cartProgress.visibility = View.GONE
-                        }
-                    }, {error ->
-                        mHandler.post {
-                            cartProgress.visibility = View.GONE
-                        }
-                    })
+                initAdapter(token,barcode)
 
-                }, {id ->
-                    Log.d("Remove product", id.toString())
-                    cartProgress.visibility = View.VISIBLE
-                    var orderQuantityModel = OrderQuantityModel(
-                            TableNum = barcode!!,
-                            Quantity = "1",
-                            ProductId = id.toString())
-                    cartViewModel.decreaseProduct(orderQuantityModel, token, {success ->
-                        mHandler.post {
-                            cartProgress.visibility = View.GONE
-                        }
-                    }, {error ->
-                        mHandler.post {
-                            cartProgress.visibility = View.GONE
-                        }
-                    })
+                observeCart()
 
-                }, {id ->
-                    cartProgress.visibility = View.VISIBLE
-                    cartViewModel.deleteProduct(id,token,{success ->
-                        mHandler.post{
-                            cartProgress.visibility = View.GONE
-                        }
-                    }, {error ->
-                        mHandler.post{
-                            cartProgress.visibility = View.GONE
-                        }
-                    })
-                } )
+        cartButton.setOnClickListener {
+            findNavController().navigate(R.id.action_cart_to_checkout)
+        }
+    }
 
-                cartList.layoutManager =  LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+     /*
+     *Adapter beállítása
+     */
+    private fun initAdapter(token: String?, barcode:String?){
+         adapter = CartAdapter(arrayListOf(),{cart ->
+            val bundle = Bundle()
+            bundle.putInt("coffeeId", cart.coffeeId)
+            findNavController().navigate(R.id.action_cart_to_SingleItem,bundle)
+        },{id ->
+            Log.d("Add product", id.toString())
+            cartProgress.visibility = View.VISIBLE
 
-                cartList.adapter = adapter
+            cartViewModel.increaseProduct(provideOrderQuantity(barcode,id.toString()),  token!!, {success ->
+                mHandler.post {
+                    cartProgress.visibility = View.GONE
+                }
+            }, {error ->
+                mHandler.post {
+                    cartProgress.visibility = View.GONE
+                }
+            })
+
+        }, {id ->
+            Log.d("Remove product", id.toString())
+            cartProgress.visibility = View.VISIBLE
+
+            cartViewModel.decreaseProduct(provideOrderQuantity(barcode,id.toString()), token!!, {success ->
+                mHandler.post {
+                    cartProgress.visibility = View.GONE
+                }
+            }, {error ->
+                mHandler.post {
+                    cartProgress.visibility = View.GONE
+                }
+            })
+
+        }, {id ->
+            cartProgress.visibility = View.VISIBLE
+            cartViewModel.deleteProduct(id,token!!,{success ->
+                mHandler.post{
+                    cartProgress.visibility = View.GONE
+                }
+            }, {error ->
+                mHandler.post{
+                    cartProgress.visibility = View.GONE
+                }
+            })
+        } )
+
+        cartList.layoutManager =  LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+        cartList.adapter = adapter
+    }
 
 
+     /*
+     *Figyeljük a kosár változását
+     */
+    @SuppressLint("SetTextI18n")
+    private fun observeCart(){
         cartViewModel.cart.observe(this, Observer<List<Cart>>{
 
             if(it!!.isNotEmpty()){
@@ -124,7 +135,7 @@ class CartFragment : Fragment() {
                 cartButton.visibility = View.VISIBLE
 
 
-                cartPrice.text = "$" + "$totalPrice"
+                cartPrice.text =  "$$totalPrice"
 
             }
             else {
@@ -139,10 +150,8 @@ class CartFragment : Fragment() {
 
             }
         })
-
-        cartButton.setOnClickListener {
-            findNavController().navigate(R.id.action_cart_to_checkout)
-        }
     }
+
+
 
 }

@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.Injection.provideOrderQuantity
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Favorite
 import kotlinx.android.synthetic.main.favorite_fragment.*
@@ -47,6 +48,10 @@ class FavoriteFragment : Fragment() {
 
     }
 
+     /*
+     * Adapter beállítása
+     */
+
     private fun initAdapter(token:String?,barcode:String?){
         adapter = FavoriteAdapter ({
             // go to singel item
@@ -56,11 +61,7 @@ class FavoriteFragment : Fragment() {
         },{
             //add
             favoriteProgress.visibility = View.VISIBLE
-            val orderQuantityModel = OrderQuantityModel(
-                    TableNum = barcode!!,
-                    Quantity = "1",
-                    ProductId = it.toString())
-            favoriteViewModel.increaseProduct(orderQuantityModel,token!!, {success ->
+            favoriteViewModel.increaseProduct(provideOrderQuantity(token,it.toString()),token!!, {success ->
                 mHandler.post {
                     favoriteProgress.visibility = View.GONE
                 }
@@ -72,11 +73,8 @@ class FavoriteFragment : Fragment() {
         },{
             //delete
             favoriteProgress.visibility = View.VISIBLE
-            val orderQuantityModel = OrderQuantityModel(
-                    TableNum = barcode!!,
-                    Quantity = "1",
-                    ProductId = it.toString())
-            favoriteViewModel.decreaseProduct(orderQuantityModel,token!!, {success ->
+
+            favoriteViewModel.decreaseProduct(provideOrderQuantity(token,it.toString()),token!!, {success ->
                 mHandler.post {
                     favoriteProgress.visibility = View.GONE
                 }
@@ -104,6 +102,10 @@ class FavoriteFragment : Fragment() {
     }
 
 
+     /*
+     * Kedvencek figyelése
+     */
+
     private fun observeFavorites(adapter:FavoriteAdapter){
         favoriteViewModel.favorites.observe(this, Observer<List<Favorite>>{
 
@@ -120,10 +122,16 @@ class FavoriteFragment : Fragment() {
         })
     }
 
+    /*
+     * Kosár figyelése
+     */
+
     private fun observeCart(adapter: FavoriteAdapter){
 
         favoriteViewModel.cart.observe(this, Observer { cart ->
             adapter.setCart(cart?: emptyList())
         })
     }
+
+
 }

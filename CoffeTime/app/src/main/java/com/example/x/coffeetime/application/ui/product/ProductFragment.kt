@@ -22,7 +22,7 @@ import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.model.Coffee
 import kotlinx.android.synthetic.main.product_fragment.*
 import android.support.v7.widget.LinearLayoutManager
-import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
+import com.example.x.coffeetime.application.Injection.provideOrderQuantity
 
 
 class ProductFragment : Fragment() {
@@ -30,7 +30,7 @@ class ProductFragment : Fragment() {
     private val CAMERA_REQUEST_CODE = 100
     private lateinit var productViewModel: ProductViewModel
     private val mHandler: Handler = Handler(Looper.getMainLooper())
-
+    private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -53,9 +53,9 @@ class ProductFragment : Fragment() {
 
                saveToken(token.get(0).token)
                 productViewModel.initFavorites(token.get(0).token)
-                productViewModel.getCart(token.get(0).token)
+                productViewModel.getCart(token[0].token)
 
-                Log.d("ez a token", token.get(0).token)
+                Log.d("ez a token", token[0].token)
 
                 val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
                 val defaultValue = "coffeeshop123"
@@ -75,50 +75,9 @@ class ProductFragment : Fragment() {
                         val query = productViewModel.lastQueryValue() ?: DEFAULT_QUERY
                         productViewModel.searchCoffee(query)
 
-                        val adapter = ProductAdapter({ coffee ->
-                            Log.i("Coffee:", "$coffee clicked")
 
-                            val bundle = Bundle()
-                            bundle.putInt("coffeeId", coffee.coffeeId)
-
-
-                            findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
-
-                        }, {id ->
-                            productProgress.visibility = View.VISIBLE
-                            var orderQuantityModel = OrderQuantityModel(
-                                    TableNum = barcode,
-                                    Quantity = "1",
-                                    ProductId = id.toString())
-                            productViewModel.increaseProduct(orderQuantityModel,token.get(0).token, {success ->
-                                mHandler.post {
-                                    productProgress.visibility = View.GONE
-                                }
-                            }, {error ->
-                                mHandler.post {
-                                    productProgress.visibility = View.GONE
-                                }
-                            })
-                        }, {id ->
-                            productProgress.visibility = View.VISIBLE
-                            var orderQuantityModel = OrderQuantityModel(
-                                    TableNum = barcode,
-                                    Quantity = "1",
-                                    ProductId = id.toString())
-                            productViewModel.decreaseProduct(orderQuantityModel,token.get(0).token, {success ->
-                                mHandler.post {
-                                    productProgress.visibility = View.GONE
-                                }
-
-
-                            }, {error ->
-                                mHandler.post {
-                                    productProgress.visibility = View.GONE
-                                }
-
-                            })
-                        })
-                        initAdapter(adapter)
+                        initAdapter(barcode, token[0].token)
+                        observeCoffees()
                         observeCart(adapter)
                         initSearch(adapter)
 
@@ -147,8 +106,10 @@ class ProductFragment : Fragment() {
         }
     }
 
+    /*
+     * Kosár figyelése
+     */
     private fun observeCart(adapter: ProductAdapter){
-
 
         productViewModel.cart.observe(this, Observer { cart ->
           adapter.setCart(cart?: emptyList())
@@ -156,7 +117,9 @@ class ProductFragment : Fragment() {
     }
 
 
-
+    /*
+     * JWT Token elmentése
+     */
     private fun saveToken(token: String){
         val tokenPref = activity?.getPreferences(Context.MODE_PRIVATE)
         tokenPref
@@ -165,8 +128,10 @@ class ProductFragment : Fragment() {
                 ?.apply()
     }
 
+    /*
+     * Vonalkód érvényességének egyszerű ellenőrzése
+     */
     private fun validateBarcode(barcode: String): Boolean{
-
 
         var isValid = 0
         for (a in 1..15){
@@ -174,14 +139,60 @@ class ProductFragment : Fragment() {
                 isValid++
             }
         }
-        return if (isValid > 0 ) true else false
+        return isValid > 0
 
     }
 
+    /*
+     * Adapter beállítása
+     */
+    private fun initAdapter(barcode: String?,token:String?) {
+         adapter = ProductAdapter({ coffee ->
+            Log.i("Coffee:", "$coffee clicked")
 
-    private fun initAdapter(adapter: ProductAdapter) {
+            val bundle = Bundle()
+            bundle.putInt("coffeeId", coffee.coffeeId)
+
+
+            findNavController().navigate(R.id.action_menu_to_SingleItem, bundle)
+
+        }, {id ->
+            productProgress.visibility = View.VISIBLE
+
+            productViewModel.increaseProduct(provideOrderQuantity(barcode,id.toString()),token!!, {success ->
+                mHandler.post {
+                    productProgress.visibility = View.GONE
+                }
+            }, {error ->
+                mHandler.post {
+                    productProgress.visibility = View.GONE
+                }
+            })
+        }, {id ->
+            productProgress.visibility = View.VISIBLE
+
+            productViewModel.decreaseProduct(provideOrderQuantity(barcode,id.toString()),token!!, {success ->
+                mHandler.post {
+                    productProgress.visibility = View.GONE
+                }
+
+
+            }, {error ->
+                mHandler.post {
+                    productProgress.visibility = View.GONE
+                }
+
+            })
+        })
         list.adapter = adapter
         list.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+
+    }
+
+    /*
+     * Kávék listájának figyelése
+     */
+    private fun observeCoffees(){
         productViewModel.coffees.observe(this, Observer<PagedList<Coffee>> {
             Log.d("Activity", "list: ${it?.size}")
             showEmptyList(it?.size == 0)
@@ -194,6 +205,9 @@ class ProductFragment : Fragment() {
         })
     }
 
+    /*
+     * Kereső sáv alapján keresés a kávék között
+     */
     private fun initSearch(adapter: ProductAdapter) {
         search_coffee.setText(productViewModel.lastQueryValue())
 
@@ -215,16 +229,21 @@ class ProductFragment : Fragment() {
         }
     }
 
+    /*
+     * Kávék lekérése
+     */
     private fun updateCoffeeListFromInput(adapter: ProductAdapter) {
         search_coffee.text.trim().let {
-
-            list.scrollToPosition(0)
+           // list.scrollToPosition(0)
             productViewModel.searchCoffee(it.toString())
             adapter.submitList(null)
-
         }
     }
 
+
+    /*
+     * Üres lista mutatása ha nincs találat
+     */
     private fun showEmptyList(show: Boolean) {
         if (show) {
             emptyList.visibility = View.VISIBLE
@@ -235,7 +254,9 @@ class ProductFragment : Fragment() {
         }
     }
 
-
+    /*
+     * Jogosultságok kezelése
+     */
     private fun setupPermissions() {
         val permission = ActivityCompat.checkSelfPermission(context!!,
                 Manifest.permission.CAMERA)
@@ -249,12 +270,19 @@ class ProductFragment : Fragment() {
         }
     }
 
+    /*
+     * Kamera hozzáférés kérése
+     */
     private fun makeRequest() {
         requestPermissions(
                 arrayOf(Manifest.permission.CAMERA),
                 CAMERA_REQUEST_CODE)
     }
 
+
+    /*
+     * Figyeljük megkaptuk e a kamera hozzáférést
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             CAMERA_REQUEST_CODE -> {
@@ -273,7 +301,6 @@ class ProductFragment : Fragment() {
     }
 
     companion object {
-        private const val LAST_SEARCH_QUERY: String = "last_search_query"
         private const val DEFAULT_QUERY = ""
     }
 

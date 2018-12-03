@@ -47,10 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
         private class DatabaseCallback(
 
         ) : RoomDatabase.Callback() {
-            /**
-             * Override the onOpen method to populate the database.
-             * For this sample, we clear the database every time it is created or opened.
-             */
+
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
                 // If you want to keep the data through app restarts,

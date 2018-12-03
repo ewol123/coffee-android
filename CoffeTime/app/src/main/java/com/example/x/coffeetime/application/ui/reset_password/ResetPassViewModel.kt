@@ -4,12 +4,12 @@ import android.arch.lifecycle.ViewModel
 import com.example.x.coffeetime.application.Validator
 import com.example.x.coffeetime.application.data.AuthRepository
 
-class ResetPassViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class ResetPassViewModel(private val authRepo: AuthRepository) : ViewModel() {
 
 
     fun sendPasswordRequest(email: String, onSuccess: (success: String) -> Unit, onError: (error: String) -> Unit){
 
-        authRepository.sendPasswordReset(email,{success ->
+        authRepo.sendPasswordReset(email,{ success ->
             onSuccess(success)
         }, {error ->
             onError(error)
@@ -23,7 +23,7 @@ class ResetPassViewModel(private val authRepository: AuthRepository) : ViewModel
             onSuccess: (success: String) -> Unit,
             onError: (error: String) -> Unit ) {
 
-        authRepository.provideToken(token,email,newPass,{success ->
+        authRepo.provideToken(token,email,newPass,{ success ->
             onSuccess(success)
         }, {error ->
             onError(error)

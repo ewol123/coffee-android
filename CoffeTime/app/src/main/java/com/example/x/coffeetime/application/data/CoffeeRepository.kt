@@ -6,7 +6,6 @@ import android.arch.paging.PagedList
 import android.util.Log
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.db.CoffeeLocalCache
-import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
 import com.example.x.coffeetime.application.model.CoffeeSearchResult
 
@@ -18,10 +17,10 @@ class CoffeeRepository(
     fun search(query: String ): CoffeeSearchResult {
         Log.d("CoffeeRepository", "New query: $query")
 
-        // Get data source factory from the local coffeeCache
+        //data source factory elkérése a cacheből
         val dataSourceFactory = coffeeCache.coffeesByName(query)
 
-        // Construct the boundary callback
+        // boundary callback létrehozása
         val boundaryCallback = CoffeeBoundaryCallback(query, service, coffeeCache)
 
         val networkErrors = boundaryCallback.networkErrors
@@ -32,14 +31,12 @@ class CoffeeRepository(
                 .setPageSize(DATABASE_PAGE_SIZE)
                 .build()
 
-        // Get the paged list
+        // paged list létrehozása a data source factory és boundary callback megadásával
         val data = LivePagedListBuilder(dataSourceFactory, config )
                 .setBoundaryCallback(boundaryCallback)
                 .build()
 
 
-
-        // Get the network errors exposed by the boundary callback
         return CoffeeSearchResult(data, networkErrors)
     }
 

@@ -1,9 +1,9 @@
 package com.example.x.coffeetime.application.ui.product.SingleProduct
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
+import com.example.x.coffeetime.application.Injection.provideOrderQuantity
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
@@ -31,9 +32,6 @@ class SingleProductFragment : Fragment() {
     private lateinit var singleViewModel: SingleProductViewModel
     private val mHandler: Handler = Handler(Looper.getMainLooper())
 
-    companion object {
-        fun newInstance() = SingleProductFragment()
-    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -54,10 +52,6 @@ class SingleProductFragment : Fragment() {
         val defaultValue = "coffeeshop123"
         val barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
 
-        var orderQuantityModel = OrderQuantityModel(
-                TableNum = barcode!!,
-                Quantity = "1",
-                ProductId = coffeeId.toString())
 
         val tokenPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val defaultToken = "0"
@@ -67,23 +61,46 @@ class SingleProductFragment : Fragment() {
             findNavController().navigate(R.id.action_singleItem_to_cart)
         }
 
-        singleViewModel.cart.observe(this, Observer { cart ->
-            initOrder(cart, coffeeId, productQuantity, removeProduct, addProduct, orderQuantityModel, token)
-        })
+        observeCart(barcode,coffeeId,token)
 
         if (coffeeId != 0) {
 
-            singleViewModel.coffeeById(coffeeId).observe(this, Observer { coffee ->
-                Log.d("id", coffeeId.toString())
-                Log.d("coffee:", coffee.toString())
+            observeSingleCoffee(coffeeId)
 
-                if (coffee!!.isNotEmpty()) {
-                    initDetails(coffee)
-                }
-            })
+            observeFavorites(coffeeId)
         }
 
 
+
+    }
+
+    /*
+     * Kosár figyelése
+     */
+    private fun observeCart(barcode:String?,coffeeId:Int?,token:String?){
+        singleViewModel.cart.observe(this, Observer { cart ->
+            initOrder(cart, coffeeId!!, productQuantity, removeProduct, addProduct, provideOrderQuantity(barcode,coffeeId.toString()), token)
+        })
+    }
+
+    /*
+     * Termék adatainak figyelése
+     */
+    private fun observeSingleCoffee(coffeeId: Int?){
+        singleViewModel.coffeeById(coffeeId!!).observe(this, Observer { coffee ->
+            Log.d("id", coffeeId.toString())
+            Log.d("coffee:", coffee.toString())
+
+            if (coffee!!.isNotEmpty()) {
+                initDetails(coffee)
+            }
+        })
+    }
+
+    /*
+     * Kedvencek figyelése
+     */
+    private fun observeFavorites(coffeeId: Int?){
         singleViewModel.favorites.observe(this,Observer{favorites ->
             if(favorites!!.isEmpty()){
                 removeFav.visibility = View.GONE
@@ -104,37 +121,12 @@ class SingleProductFragment : Fragment() {
 
             }
         })
-
-        addFav.setOnClickListener {
-            singleProductProgress.visibility = View.VISIBLE
-
-            singleViewModel.addFavorite(coffeeId,token!!,{success ->
-                mHandler.post {
-                    singleProductProgress.visibility = View.GONE
-                }
-
-            }, {error ->
-                mHandler.post {
-                    singleProductProgress.visibility = View.GONE
-                }
-            })
-        }
-        removeFav.setOnClickListener {
-            singleProductProgress.visibility = View.VISIBLE
-
-            singleViewModel.deleteFavorite(coffeeId,token!!,{success ->
-                mHandler.post {
-                    singleProductProgress.visibility = View.GONE
-                }
-            }, {error ->
-                mHandler.post {
-                    singleProductProgress.visibility = View.GONE
-                }
-            })
-        }
-
     }
 
+    /*
+     * Termék adatainak beállítása
+     */
+    @SuppressLint("SetTextI18n")
     private fun initDetails(coffee: List<Coffee>) {
         Picasso.get()
                 .load(coffee[0].imagePath)
@@ -160,6 +152,9 @@ class SingleProductFragment : Fragment() {
     }
 
 
+    /*
+     * A termék kosárban lévő adatainak figyelése
+     */
     private fun initOrder(
             cartList: List<Cart>?,
             coffeeId: Int,
@@ -181,6 +176,10 @@ class SingleProductFragment : Fragment() {
             }
         }
 
+
+        /*
+         * Termék mennyiségének csökkentése
+         */
         removeProduct.setOnClickListener {
             singleProductProgress.visibility = View.VISIBLE
             Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
@@ -195,6 +194,9 @@ class SingleProductFragment : Fragment() {
                 })
         }
 
+        /*
+         * Termék mennyiségének növelése
+         */
         addProduct.setOnClickListener {
             singleProductProgress.visibility = View.VISIBLE
             Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
@@ -208,7 +210,41 @@ class SingleProductFragment : Fragment() {
                     }
                 })
         }
+
+        /*
+         * Kedvenc hozzáadása
+         */
+        addFav.setOnClickListener {
+            singleProductProgress.visibility = View.VISIBLE
+
+            singleViewModel.addFavorite(coffeeId,token!!,{success ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+
+            }, {error ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+            })
+        }
+
+        /*
+         * Kedvenc eltávolítása
+         */
+        removeFav.setOnClickListener {
+            singleProductProgress.visibility = View.VISIBLE
+
+            singleViewModel.deleteFavorite(coffeeId,token!!,{success ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+            }, {error ->
+                mHandler.post {
+                    singleProductProgress.visibility = View.GONE
+                }
+            })
+        }
+
     }
-
-
 }

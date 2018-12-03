@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import com.example.x.coffeetime.application.api.ApiService
+import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.CoffeeRepository
@@ -17,11 +18,16 @@ import java.util.concurrent.Executors
 
 
 /**
- * Class that handles object creation.
- * Like this, objects can be passed as parameters in the constructors and then replaced for
- * testing, where needed.
+ * Objektumok beszúrását kezelő osztály
  */
 object Injection {
+
+     fun provideOrderQuantity(barcode: String?, id: String?): OrderQuantityModel {
+        return OrderQuantityModel(
+                TableNum = barcode!!,
+                Quantity = "1",
+                ProductId = id!!)
+    }
 
     private fun provideContext(application: Application): Context {
         return application

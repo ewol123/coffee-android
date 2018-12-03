@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList
 import android.util.Log
 import com.example.x.coffeetime.application.api.ApiService
-import com.example.x.coffeetime.application.api.BindingModel.PaginationModel
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.db.CoffeeLocalCache
 import com.example.x.coffeetime.application.model.Coffee
@@ -18,17 +17,14 @@ class CoffeeBoundaryCallback(
 ) : PagedList.BoundaryCallback<Coffee>() {
 
 
-
-
-
     private var lastRequestedPage = 1
     val apiService = ApiService()
     private val _networkErrors = MutableLiveData<String>()
-    // LiveData of network errors.
+
     val networkErrors: LiveData<String>
         get() = _networkErrors
 
-    // avoid triggering multiple requests in the same time
+    // változó több request elküldésének elkerülése céljából
     private var isRequestInProgress = false
 
 
@@ -49,10 +45,10 @@ class CoffeeBoundaryCallback(
 
         isRequestInProgress = true
         apiService.searchCoffees(service, query, lastRequestedPage, NETWORK_PAGE_SIZE, { coffees ->
-            cache.insert(coffees, {
+            cache.insert(coffees) {
                 lastRequestedPage++
                 isRequestInProgress = false
-             })
+             }
         }, { error ->
             _networkErrors.postValue(error)
             isRequestInProgress = false

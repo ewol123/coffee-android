@@ -16,9 +16,7 @@ import kotlinx.android.synthetic.main.reset_pass_fragment.*
 
 class ResetPassFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ResetPassFragment()
-    }
+
 
     private lateinit var resetPassViewModel: ResetPassViewModel
 
@@ -41,6 +39,16 @@ class ResetPassFragment : Fragment() {
             findNavController().navigate(R.id.action_resetPass_to_login)
         }
 
+        sendCodeBtnListener()
+
+        resetPassBtnListener()
+
+    }
+
+    /*
+     * Kód elküldése gomb figyelése
+     */
+    private fun sendCodeBtnListener(){
         sendCodeBtn?.setOnClickListener {
             var email: String = resetPassEmail?.text.toString()
 
@@ -74,7 +82,12 @@ class ResetPassFragment : Fragment() {
                 })
             }
         }
+    }
 
+    /*
+     * Jelszó visszaállítása gomb figyelése
+     */
+    private fun resetPassBtnListener(){
         resetPassBtn.setOnClickListener {
 
             var code: String = resetPassCode?.text.toString()
@@ -100,11 +113,7 @@ class ResetPassFragment : Fragment() {
                     Toast.makeText(context,"Failed, please try again",Toast.LENGTH_SHORT).show()
                 })
             }
-
-
         }
-
-
     }
 
 }

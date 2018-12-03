@@ -37,6 +37,11 @@ class RegisterFragment : Fragment() {
             findNavController().navigate(R.id.action_register_to_Login)
         }
 
+        setRegisterButtonListener()
+
+    }
+
+    private fun setRegisterButtonListener(){
         regButton?.setOnClickListener {
 
             var email: String = regEmail?.text.toString()
@@ -49,15 +54,14 @@ class RegisterFragment : Fragment() {
             var isValidPassword : Boolean = registerViewModel.validator.validatePassword(regPassword,regConfirmPassword)
 
             if(isValidEmail && isValidPassword){
-            registerViewModel.register(createUserModel,context,{ success ->
-                regEmail?.text?.clear()
-                regPassword?.text?.clear()
-                regConfirmPassword?.text?.clear()
-            }, {error ->
-                Log.d("error","error placeholder")
-            }) }
+                registerViewModel.register(createUserModel,context,{ success ->
+                    regEmail?.text?.clear()
+                    regPassword?.text?.clear()
+                    regConfirmPassword?.text?.clear()
+                }, {error ->
+                    Log.d("error","error placeholder")
+                }) }
         }
-
     }
 
 }

@@ -59,5 +59,6 @@
     <string name="cart">Cart</string>
     <string name="favorites">Favorites</string>
     <string name="favorite_empty">You don\'t have favorites</string>
+    <string name="scan_code">SCAN CODE</string>
 
 </resources>

@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.navigation.fragment.findNavController
-import butterknife.ButterKnife
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
-import com.example.x.coffeetime.application.ui.cart.CartViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
 
 class LoginFragment : Fragment() {
@@ -23,10 +21,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val view: View = inflater.inflate(R.layout.login_fragment, container, false)
-        ButterKnife.bind(this,view)
-
-        return view
+        return inflater.inflate(R.layout.login_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -40,18 +35,8 @@ class LoginFragment : Fragment() {
         loginViewModel.delete()
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         sharedPref?.edit()?.clear()?.apply()
-        loginButton?.setOnClickListener({
 
-            var email : String = loginEmail?.text.toString()
-            var password : String = loginPassword?.text.toString()
-            loginProgressBar?.visibility = View.VISIBLE
-             loginViewModel.login(email, password,context, { success ->
-                 loginProgressBar?.visibility = View.GONE
-                 findNavController().navigate(R.id.to_menu,null)
-             }, {error ->
-                 loginProgressBar?.visibility = View.GONE
-             })
-        })
+        setLoginButtonListener()
 
         sign_up_text?.setOnClickListener {
             findNavController().navigate(R.id.action_login_to_Register)
@@ -61,6 +46,21 @@ class LoginFragment : Fragment() {
             findNavController().navigate(R.id.action_login_to_resetPass)
         }
 
+    }
+
+    private fun setLoginButtonListener(){
+        loginButton?.setOnClickListener {
+
+            var email : String = loginEmail?.text.toString()
+            var password : String = loginPassword?.text.toString()
+            loginProgressBar?.visibility = View.VISIBLE
+            loginViewModel.login(email, password,context, { success ->
+                loginProgressBar?.visibility = View.GONE
+                findNavController().navigate(R.id.to_menu,null)
+            }, {error ->
+                loginProgressBar?.visibility = View.GONE
+            })
+        }
     }
 
 

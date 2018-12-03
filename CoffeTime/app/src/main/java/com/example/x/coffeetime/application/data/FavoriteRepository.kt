@@ -3,7 +3,6 @@ package com.example.x.coffeetime.application.data
 import android.arch.lifecycle.LiveData
 import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.api.MainService
-import com.example.x.coffeetime.application.db.CartLocalCache
 import com.example.x.coffeetime.application.db.FavoriteLocalCache
 import com.example.x.coffeetime.application.model.Favorite
 

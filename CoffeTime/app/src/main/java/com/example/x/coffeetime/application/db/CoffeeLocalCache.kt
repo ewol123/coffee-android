@@ -8,17 +8,13 @@ import com.example.x.coffeetime.application.model.Coffee
 import java.util.concurrent.Executor
 
 /**
- * Class that handles the DAO local data source. This ensures that methods are triggered on the
- * correct executor.
+ * Local cache osztályok feladata a DAO local data sourcek kezelése gyakran másik szálon.
  */
 class CoffeeLocalCache(
         private val coffeeDao: CoffeeDao,
         private val ioExecutor: Executor
 ) {
 
-    /**
-     * Insert a list of coffees in the database, on a background thread.
-     */
     fun insert(coffees: List<Coffee>, insertFinished: ()-> Unit) {
         ioExecutor.execute {
             Log.d("CoffeeLocalCache", "inserting ${coffees.size} coffees")
@@ -35,7 +31,7 @@ class CoffeeLocalCache(
     }
 
     fun coffeesByName(name: String): DataSource.Factory<Int,Coffee> {
-        // appending '%' so we can allow other characters to be before and after the query string
+
         val query = "%${name.replace(' ', '%')}%"
         return coffeeDao.coffeesByName(query)
     }

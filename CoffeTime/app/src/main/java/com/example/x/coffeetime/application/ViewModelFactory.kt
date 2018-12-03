@@ -32,7 +32,7 @@ class ViewModelFactory(private val coffeeRepo: CoffeeRepository,
         }
         else if (modelClass.isAssignableFrom(CartViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
-            return CartViewModel(cartRepo,authRepo) as T
+            return CartViewModel(cartRepo) as T
         }
         else if (modelClass.isAssignableFrom(LoginViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
@@ -48,7 +48,7 @@ class ViewModelFactory(private val coffeeRepo: CoffeeRepository,
         }
         else if(modelClass.isAssignableFrom(CheckoutViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
-            return CheckoutViewModel(cartRepo,authRepo) as T
+            return CheckoutViewModel(cartRepo) as T
         }
         else if(modelClass.isAssignableFrom(FavoriteViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")

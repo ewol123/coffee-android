@@ -1,8 +1,6 @@
 package com.example.x.coffeetime.application.ui.cart
 
-import android.arch.paging.PagedListAdapter
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +12,6 @@ import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.model.Cart
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import kotlinx.android.synthetic.main.cart_item.view.*
-import kotlinx.android.synthetic.main.product_item.view.*
 
 class CartAdapter(cart: List<Cart>,
                   val listener: (Cart) -> Unit,

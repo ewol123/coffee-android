@@ -8,13 +8,13 @@ import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.FavoriteRepository
 import com.example.x.coffeetime.application.model.Cart
 
-class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
-                        private val cartRepository: CartRepository) : ViewModel() {
+class FavoriteViewModel(private val favoriteRepo: FavoriteRepository,
+                        private val cartRepo: CartRepository) : ViewModel() {
 
 
     fun initFavorites(token : String){
 
-        favoriteRepository.getFavorites({success ->
+        favoriteRepo.getFavorites({ success ->
             Log.d("CART_SUCCESS", success)
         }, {error ->
             Log.d("CART_ERROR", error)
@@ -24,7 +24,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     fun addFavorite(id:Int, token: String,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit){
-        favoriteRepository.addFavorite({success ->
+        favoriteRepo.addFavorite({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
@@ -34,7 +34,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     fun deleteFavorite(id:Int, token: String,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit){
-        favoriteRepository.deleteFavorite({success ->
+        favoriteRepo.deleteFavorite({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
@@ -45,7 +45,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     fun increaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit ){
-        cartRepository.increaseProduct({success ->
+        cartRepo.increaseProduct({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
@@ -55,7 +55,7 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit){
-        cartRepository.decreaseProduct({success ->
+        cartRepo.decreaseProduct({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
@@ -63,8 +63,8 @@ class FavoriteViewModel(private val favoriteRepository: FavoriteRepository,
     }
 
 
-    val cart: LiveData<List<Cart>> = cartRepository.findOrders()
+    val cart: LiveData<List<Cart>> = cartRepo.findOrders()
 
-    val favorites = favoriteRepository.findFavorites()
+    val favorites = favoriteRepo.findFavorites()
 
 }

@@ -1,5 +1,6 @@
 package com.example.x.coffeetime.application.ui.checkout
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -35,15 +36,10 @@ import kotlinx.android.synthetic.main.product_fragment.*
 
 
 class CheckoutFragment : Fragment() {
-
-
-    companion object {
-        private const val DROP_IN_REQUEST: Int = 150
-    }
-
     private lateinit var checkoutViewModel: CheckoutViewModel
     private var totalPrice : Int = 0
     private lateinit var mBraintreeFragment : BraintreeFragment
+    private lateinit var adapter: CheckoutAdapter
     private val mHandler: Handler = Handler(Looper.getMainLooper())
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -60,6 +56,22 @@ class CheckoutFragment : Fragment() {
         val token = sharedPref?.getString(getString(R.string.preference_token_key), defaultValue)
         mBraintreeFragment = BraintreeFragment.newInstance(activity, "sandbox_dw398mmw_czrg5hprsvbkxws3")
 
+        setPaypalText()
+
+        initAdapter()
+
+        observeCart()
+
+        setCashPayClickListener(token)
+
+        setPaypalPayClickListener(token)
+
+    }
+
+     /*
+     * PayPal gombunk szövegének megformázása
+     */
+    private fun setPaypalText(){
         val normalText = "Pay with"
         val styledText = "PayPal"
         val paypalStr = SpannableString(normalText + styledText)
@@ -67,39 +79,40 @@ class CheckoutFragment : Fragment() {
         paypalStr.setSpan(StyleSpan(Typeface.ITALIC), 8, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         paypalStr.setSpan(RelativeSizeSpan(1.6f), 8, 14, 0)
         payPaypalBtn.text = paypalStr
+    }
 
-        var adapter = CheckoutAdapter(arrayListOf())
+     /*
+     * Adapter beállítása
+     */
+    private fun initAdapter(){
+          adapter = CheckoutAdapter(arrayListOf())
+         checkoutList.layoutManager =  LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+         checkoutList.adapter = adapter
+    }
 
-        checkoutList.layoutManager =  LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
-
-        checkoutList.adapter = adapter
-
-
+    /*
+     * Figyeljük a kosár változását
+     */
+    @SuppressLint("SetTextI18n")
+    private fun observeCart(){
         checkoutViewModel.cart.observe(this, Observer<List<Cart>>{
 
             if(it!!.isNotEmpty()){
-
                 adapter.addToCart(it)
-
 
                 totalPrice = 0
                 it.forEach{
                     totalPrice += it.totalPrice
                 }
-
-                checkoutPrice.text = "$" + totalPrice
-
+                checkoutPrice.text = "$$totalPrice"
             }
-
         })
+    }
 
-        payPaypalBtn.setOnClickListener {
-            val request = PayPalRequest(totalPrice.toString())
-                    .currencyCode("USD")
-                    .intent(PayPalRequest.INTENT_AUTHORIZE)
-            PayPal.requestOneTimePayment(mBraintreeFragment, request)
-        }
-
+     /*
+     * Készpénzes fizetés gomb click esemény figyelése
+     */
+    private fun setCashPayClickListener(token: String?){
         payCashBtn.setOnClickListener {
             checkoutProgress.visibility = View.VISIBLE
             checkoutViewModel.updateOrder({success ->
@@ -115,6 +128,18 @@ class CheckoutFragment : Fragment() {
                 }
             },"cash",token!!)
 
+        }
+    }
+
+    /*
+   * Paypalos fizetés gomb click esemény figyelése, a visszakapott eredmény figyelésével
+   */
+    private fun setPaypalPayClickListener(token: String?){
+        payPaypalBtn.setOnClickListener {
+            val request = PayPalRequest(totalPrice.toString())
+                    .currencyCode("USD")
+                    .intent(PayPalRequest.INTENT_AUTHORIZE)
+            PayPal.requestOneTimePayment(mBraintreeFragment, request)
         }
 
         mBraintreeFragment?.addListener(PaymentMethodNonceCreatedListener {
@@ -140,7 +165,6 @@ class CheckoutFragment : Fragment() {
             }
 
         })
-
     }
 
 

@@ -21,11 +21,7 @@ class BarcodeFragment : Fragment() {
 
     private var mDisposable: Disposable? = null
 
-    companion object {
-        fun newInstance() = BarcodeFragment()
-    }
 
-    private lateinit var viewModel: BarcodeViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,17 +30,14 @@ class BarcodeFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(BarcodeViewModel::class.java)
+
+
+        startScanBtn.setOnClickListener {
+            scanBarcode()
+
+        }
 
     }
-
-    override fun onStart() {
-        super.onStart()
-        scanBarcode()
-        //make sure to request camera permission before the subscription
-    }
-
-
 
 
     private fun scanBarcode(){
