@@ -64,7 +64,8 @@ object Injection {
     }
 
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
-        return ViewModelFactory(provideCoffeeRepository(context),
+        return ViewModelFactory(
+                provideCoffeeRepository(context),
                 provideCartRepository(context),
                 provideAuthRepository(),
                 provideFavoriteRepository(context))

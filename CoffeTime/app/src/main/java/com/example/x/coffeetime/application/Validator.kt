@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.product_fragment.view.*
 
 class Validator{
 
-    fun validateEmail (email :EditText?): Boolean{
+     fun validateEmail (email :EditText?): Boolean{
 
         var isEmpty = email?.text.toString().nonEmpty { msg ->
             email?.error = msg

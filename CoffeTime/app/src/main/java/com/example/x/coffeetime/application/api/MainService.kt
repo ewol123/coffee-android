@@ -14,6 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
+import com.example.x.coffeetime.application.api.ResponseModel.loginResponse
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Favorite
 import kotlinx.serialization.Optional
@@ -23,8 +24,6 @@ import kotlinx.serialization.Serializable
 private const val TAG = "MainService"
 private const val CLIENT_ID = "5bd1d38ccf7a428ab3b963ac8bd1e4de"
 
-@Serializable
-data class Data(val error: String,  val error_description: String)
 
 class ApiService {
 
@@ -53,7 +52,7 @@ class ApiService {
                             val token = response.body()?.token ?: ""
                             onSuccess(token)
                         } else {
-                            val obj = JSON.parse(Data.serializer(), response.errorBody()?.string()!!)
+                            val obj = JSON.parse(loginResponse.serializer(), response.errorBody()?.string()!!)
 
                             onError(obj.error_description)
                         }
@@ -87,7 +86,8 @@ class ApiService {
 
                             onSuccess(response.message() ?: "unknown error")
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+
+                            onError("Error, please try again with a different email")
                         }
 
                     }
@@ -127,7 +127,7 @@ class ApiService {
                             Log.d("coffees", coffees.toString())
                             onSuccess(coffees)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while searching coffees")
                         }
                     }
                 }
@@ -158,7 +158,7 @@ class ApiService {
                             Log.d("orders", orders.toString())
                             onSuccess(orders)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while searching orders")
                         }
                     }
                 }
@@ -229,9 +229,9 @@ class ApiService {
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            onSuccess(response.body() ?: "changed")
+                            onSuccess(response.body()!!)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while increasing product")
                         }
                     }
                 }
@@ -253,9 +253,9 @@ class ApiService {
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            onSuccess(response.body() ?: "changed")
+                            onSuccess(response.body()!!)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while decreasing product")
                         }
                     }
                 }
@@ -277,9 +277,9 @@ class ApiService {
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         if (response.isSuccessful) {
-                            onSuccess(response.body() ?: "deleted")
+                            onSuccess(response.body()!!)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while deleting product")
                         }
                     }
                 }
@@ -305,7 +305,7 @@ class ApiService {
                         if (response.isSuccessful) {
                             onSuccess(response.body() ?: "Order Successful")
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while updating order")
                         }
 
                     }
@@ -337,7 +337,7 @@ class ApiService {
                         if (response.isSuccessful) {
                             onSuccess("Added to favorites")
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while adding favorite")
                         }
                     }
                 }
@@ -368,7 +368,7 @@ class ApiService {
                         if (response.isSuccessful) {
                             onSuccess("Deleted from favorites")
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while deleting favorite")
                         }
                     }
                 }
@@ -398,7 +398,7 @@ class ApiService {
                             Log.d("orders", favorites.toString())
                             onSuccess(favorites)
                         } else {
-                            onError(response.errorBody()?.string() ?: "Unknown error")
+                            onError("Error while finding favorites")
                         }
                     }
                 }
@@ -411,7 +411,7 @@ class ApiService {
 
 
 /**
- *  API communication setup via Retrofit.
+ *  API kommunikáció Retrofit-el
  */
 interface MainService {
 
@@ -502,7 +502,7 @@ interface MainService {
 
 
     companion object {
-        private const val BASE_URL ="http://192.168.1.103:5819"
+        private const val BASE_URL ="http://192.168.1.100:5819"
 
 
         fun create(): MainService {

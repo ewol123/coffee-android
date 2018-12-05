@@ -2,6 +2,8 @@ package com.example.x.coffeetime.application.ui.register
 
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +21,7 @@ class RegisterFragment : Fragment() {
 
 
     private lateinit var registerViewModel: RegisterViewModel
+    private val mHandler: Handler = Handler(Looper.getMainLooper())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -43,7 +46,7 @@ class RegisterFragment : Fragment() {
 
     private fun setRegisterButtonListener(){
         regButton?.setOnClickListener {
-
+            registerProgressBar.visibility = View.VISIBLE
             var email: String = regEmail?.text.toString()
             var password: String = regPassword?.text.toString()
             var confirmPassword: String = regConfirmPassword?.text.toString()
@@ -55,10 +58,16 @@ class RegisterFragment : Fragment() {
 
             if(isValidEmail && isValidPassword){
                 registerViewModel.register(createUserModel,context,{ success ->
+                    mHandler.post {
+                        registerProgressBar.visibility = View.GONE
+                    }
                     regEmail?.text?.clear()
                     regPassword?.text?.clear()
                     regConfirmPassword?.text?.clear()
                 }, {error ->
+                    mHandler.post {
+                        registerProgressBar.visibility = View.GONE
+                    }
                     Log.d("error","error placeholder")
                 }) }
         }
