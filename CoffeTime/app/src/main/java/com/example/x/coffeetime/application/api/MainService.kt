@@ -17,9 +17,6 @@ import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.api.ResponseModel.loginResponse
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Favorite
-import kotlinx.serialization.Optional
-import kotlinx.serialization.json.JSON
-import kotlinx.serialization.Serializable
 
 private const val TAG = "MainService"
 private const val CLIENT_ID = "5bd1d38ccf7a428ab3b963ac8bd1e4de"
@@ -52,9 +49,8 @@ class ApiService {
                             val token = response.body()?.token ?: ""
                             onSuccess(token)
                         } else {
-                            val obj = JSON.parse(loginResponse.serializer(), response.errorBody()?.string()!!)
 
-                            onError(obj.error_description)
+                            onError("Wrong credentials, please try again")
                         }
                     }
                 }
