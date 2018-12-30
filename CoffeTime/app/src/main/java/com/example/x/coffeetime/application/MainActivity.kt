@@ -26,8 +26,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         ButterKnife.bind(this)
 
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        sharedPref?.edit()?.clear()?.apply()
 
         setSupportActionBar(toolbar)
 

@@ -41,28 +41,30 @@ class BarcodeFragment : Fragment() {
 
 
     private fun scanBarcode(){
-        mDisposable = barcodeView
-                .drawOverlay()
-                .setBeepSound(true)
-                .getObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { barcode ->
-                            //handle barcode object
+        if(mDisposable == null) {
+            mDisposable = barcodeView
+                    .drawOverlay()
+                    .setBeepSound(true)
+                    .getObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { barcode ->
+                                //handle barcode object
 
-                            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-                            sharedPref
-                                    ?.edit()
-                                    ?.putString(getString(R.string.preference_file_key), barcode.rawValue)
-                                    ?.apply()
-                            findNavController().navigate(R.id.action_barcode_to_menu,null)
-                            Log.d("barcode captured:", barcode.toString())
-                        },
-                        { throwable ->
-                            //handle exceptions like no available camera for selected facing
-                            findNavController().navigate(R.id.action_barcode_to_menu,null)
-                            Toast.makeText(context,"Oops...some error occured, please try again",Toast.LENGTH_SHORT).show()
-                        })
+                                val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+                                sharedPref
+                                        ?.edit()
+                                        ?.putString(getString(R.string.preference_file_key), barcode.rawValue)
+                                        ?.apply()
+                                findNavController().navigate(R.id.action_barcode_to_menu, null)
+                                Log.d("barcode captured:", barcode.toString())
+                            },
+                            { throwable ->
+                                //handle exceptions like no available camera for selected facing
+                                findNavController().navigate(R.id.action_barcode_to_menu, null)
+                                Toast.makeText(context, "Oops...some error occured, please try again", Toast.LENGTH_SHORT).show()
+                            })
+        }
     }
 
 

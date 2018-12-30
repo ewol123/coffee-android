@@ -31,7 +31,7 @@ class ProductFragment : Fragment() {
     private lateinit var productViewModel: ProductViewModel
     private val mHandler: Handler = Handler(Looper.getMainLooper())
     private lateinit var adapter: ProductAdapter
-
+    private var barcode: String? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
@@ -39,31 +39,49 @@ class ProductFragment : Fragment() {
 
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         productViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(context!!))
                 .get(ProductViewModel::class.java)
 
+
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+        val defaultValue = "coffeeshop123"
+        barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
+
+        observeToken(barcode)
+
+        scanButton?.setOnClickListener {
+         setupPermissions()
+        }
+
+        rescanButton?.setOnClickListener {
+            setupPermissions()
+        }
+    }
+
+    /*
+     * Token figyelése
+     */
+    private fun observeToken(barcode: String?){
         productViewModel.token.observe(this, Observer { token ->
             if(token!!.isEmpty()){
 
-               findNavController().navigate(R.id.action_menu_to_login,null)
+                findNavController().navigate(R.id.action_menu_to_login,null)
 
             } else if(token.isNotEmpty()) {
 
-               saveToken(token.get(0).token)
+                saveToken(token.get(0).token)
                 productViewModel.initFavorites(token.get(0).token)
                 productViewModel.getCart(token[0].token)
 
                 Log.d("ez a token", token[0].token)
 
-                val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-                val defaultValue = "coffeeshop123"
-                val barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
 
                 if(barcode != "coffeeshop123") {
                     if (validateBarcode(barcode!!)) {
-                        nope.visibility = View.GONE
+                        invalidBarcode.visibility = View.GONE
                         scanButton?.visibility = View.GONE
                         barcodeText?.visibility = View.GONE
                         emptyList?.visibility = View.VISIBLE
@@ -89,21 +107,12 @@ class ProductFragment : Fragment() {
                         list?.visibility = View.GONE
                         input_layout?.visibility = View.GONE
                         bottomBar?.visibility = View.VISIBLE
-                        nope.visibility = View.VISIBLE
+                        invalidBarcode.visibility = View.VISIBLE
                     }
 
                 }
             }
         })
-
-
-        scanButton?.setOnClickListener {
-         setupPermissions()
-        }
-
-        rescanButton?.setOnClickListener {
-            setupPermissions()
-        }
     }
 
     /*
