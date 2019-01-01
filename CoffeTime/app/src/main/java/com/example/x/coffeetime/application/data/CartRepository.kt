@@ -25,8 +25,8 @@ class CartRepository(
     }
 
     fun getCart(onSuccess: (success: String) -> Unit,
-                onError: (error: String) -> Unit,
-                token: String){
+                onError: (error: String) -> Unit
+               ){
         apiService.findOrders(service,{orders ->
             insertOrders(orders){
                 onSuccess("success")
@@ -34,20 +34,20 @@ class CartRepository(
         }, {error ->
             cache.delete {}
             onError(error)
-        },token)
+        })
     }
 
 
     fun increaseProduct(onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit,
-                        orderQuantityModel: OrderQuantityModel,
-                        token:String){
-        apiService.increaseProduct(service,token,orderQuantityModel,{_ ->
+                        orderQuantityModel: OrderQuantityModel
+                       ){
+        apiService.increaseProduct(service,orderQuantityModel,{_ ->
             getCart({_ ->
                 onSuccess("updated")
             }, {error ->
                 onError(error)
-            }, token)
+            })
         }, {error ->
             onError(error)
         })
@@ -56,14 +56,14 @@ class CartRepository(
 
     fun decreaseProduct(onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit,
-                        orderQuantityModel: OrderQuantityModel,
-                        token:String){
-        apiService.decreaseProduct(service,token,orderQuantityModel,{_ ->
+                        orderQuantityModel: OrderQuantityModel
+                        ){
+        apiService.decreaseProduct(service,orderQuantityModel,{_ ->
             getCart({_ ->
                 onSuccess("updated")
             },{error ->
                 onError(error)
-            }, token)
+            })
         }, {error ->
             onError(error)
         })
@@ -71,14 +71,14 @@ class CartRepository(
 
     fun deleteProduct(onSuccess: (success: String) -> Unit,
                       onError: (error: String) -> Unit,
-                      id:Int,
-                      token:String){
-        apiService.deleteProduct(service,token,id,{_ ->
+                      id:Int
+                      ){
+        apiService.deleteProduct(service,id,{_ ->
             getCart({_->
                 onSuccess("deleted")
             },{error ->
                 onError(error)
-            },token)
+            })
         }, {error ->
             onError(error)
         })
@@ -86,12 +86,12 @@ class CartRepository(
 
     fun updateOrder(onSuccess: (success: String) -> Unit,
                       onError: (error: String) -> Unit,
-                      paymentMethod:String,
-                      token:String){
-        apiService.updateOrder(service,token,paymentMethod,{success ->
+                      paymentMethod:String
+                     ){
+        apiService.updateOrder(service,paymentMethod,{success ->
             getCart({_->
             },{_ ->
-            },token)
+            })
             onSuccess(success)
         }, {error ->
             onError(error)

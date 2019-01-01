@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import androidx.navigation.fragment.findNavController
 import com.example.x.coffeetime.R
@@ -59,6 +60,7 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.to_menu,null)
             }, {error ->
                 loginProgressBar?.visibility = View.GONE
+                Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
             })
         }
     }

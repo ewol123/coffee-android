@@ -1,18 +1,15 @@
 package com.example.x.coffeetime.application.ui.checkout
 
-import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.model.Cart
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import kotlinx.android.synthetic.main.cart_item.view.*
 
 
 class CheckoutAdapter(cart: List<Cart>) : RecyclerView.Adapter<CheckoutAdapter.RecyclerViewHolder>() {

@@ -10,13 +10,13 @@ class CheckoutViewModel(private val cartRepo: CartRepository) : ViewModel() {
 
     fun updateOrder(onSuccess: (success: String) -> Unit,
                     onError: (error: String) -> Unit,
-                    paymentMethod:String,
-                    token:String){
+                    paymentMethod:String
+                   ){
         cartRepo.updateOrder({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },paymentMethod,token)
+        },paymentMethod)
     }
 
 

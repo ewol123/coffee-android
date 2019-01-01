@@ -1,9 +1,7 @@
 package com.example.x.coffeetime.application.ui.favorite
 
-import android.media.Image
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +13,6 @@ import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Favorite
 import com.squareup.picasso.Picasso
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation
-import kotlinx.android.synthetic.main.favorite_item.view.*
-import kotlinx.android.synthetic.main.product_item.view.*
 
 class FavoriteAdapter(
                   val listener: (Favorite) -> Unit,
@@ -92,7 +88,6 @@ class FavoriteAdapter(
 
     fun setCart(list: List<Cart>){
         cart = list
-        Log.d("LIST:",cart.toString())
         notifyDataSetChanged()
     }
 

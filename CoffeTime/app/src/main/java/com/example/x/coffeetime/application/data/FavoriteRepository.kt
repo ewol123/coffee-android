@@ -24,8 +24,8 @@ class FavoriteRepository(
     }
 
     fun getFavorites(onSuccess: (success: String) -> Unit,
-                onError: (error: String) -> Unit,
-                token: String){
+                onError: (error: String) -> Unit)
+               {
         apiService.getFavorites(service,{favorites ->
             insertFavorites(favorites){
                 onSuccess("success")
@@ -33,21 +33,21 @@ class FavoriteRepository(
         }, {error ->
             cache.delete {}
             onError(error)
-        },token)
+        })
     }
 
 
 
     fun addFavorite(onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit,
-                        id:Int,
-                        token:String){
-        apiService.addFavorite(service,id,token,{_ ->
+                        id:Int
+                       ){
+        apiService.addFavorite(service,id,{_ ->
             getFavorites({_ ->
                 onSuccess("added")
             }, {error ->
                 onError(error)
-            }, token)
+            })
         }, {error ->
             onError(error)
         })
@@ -56,14 +56,14 @@ class FavoriteRepository(
 
     fun deleteFavorite(onSuccess: (success: String) -> Unit,
                       onError: (error: String) -> Unit,
-                      id:Int,
-                      token:String){
-        apiService.deleteFavorite(service,id,token,{_ ->
+                      id:Int
+                   ){
+        apiService.deleteFavorite(service,id,{_ ->
             getFavorites({_->
                 onSuccess("deleted")
             },{error ->
                 onError(error)
-            },token)
+            })
         }, {error ->
             onError(error)
         })

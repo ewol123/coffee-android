@@ -9,13 +9,13 @@ import android.os.Handler
 import android.os.Looper
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
@@ -53,15 +53,13 @@ class SingleProductFragment : Fragment() {
         val barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
 
 
-        val tokenPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val defaultToken = "0"
-        val token = tokenPref?.getString(getString(R.string.preference_token_key), defaultToken)
+
 
         viewOrdersBtn.setOnClickListener {
             findNavController().navigate(R.id.action_singleItem_to_cart)
         }
 
-        observeCart(barcode,coffeeId,token)
+        observeCart(barcode,coffeeId)
 
         if (coffeeId != 0) {
 
@@ -77,9 +75,9 @@ class SingleProductFragment : Fragment() {
     /*
      * Kosár figyelése
      */
-    private fun observeCart(barcode:String?,coffeeId:Int?,token:String?){
+    private fun observeCart(barcode:String?,coffeeId:Int?){
         singleViewModel.cart.observe(this, Observer { cart ->
-            initOrder(cart, coffeeId!!, productQuantity, removeProduct, addProduct, provideOrderQuantity(barcode,coffeeId.toString()), token)
+            initOrder(cart, coffeeId!!, productQuantity, removeProduct, addProduct, provideOrderQuantity(barcode,coffeeId.toString()))
         })
     }
 
@@ -88,9 +86,6 @@ class SingleProductFragment : Fragment() {
      */
     private fun observeSingleCoffee(coffeeId: Int?){
         singleViewModel.coffeeById(coffeeId!!).observe(this, Observer { coffee ->
-            Log.d("id", coffeeId.toString())
-            Log.d("coffee:", coffee.toString())
-
             if (coffee!!.isNotEmpty()) {
                 initDetails(coffee)
             }
@@ -161,8 +156,7 @@ class SingleProductFragment : Fragment() {
             productQuantity: TextView,
             removeProduct: FloatingActionButton,
             addProduct: FloatingActionButton,
-            orderQuantityModel: OrderQuantityModel,
-            token: String?
+            orderQuantityModel: OrderQuantityModel
     ) {
         if (coffeeId != 0) {
             var cartItem = cartList?.find { item -> item.coffeeId == coffeeId }
@@ -182,8 +176,7 @@ class SingleProductFragment : Fragment() {
          */
         removeProduct.setOnClickListener {
             singleProductProgress.visibility = View.VISIBLE
-            Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
-                singleViewModel.decreaseProduct(orderQuantityModel, token!!, {success ->
+                singleViewModel.decreaseProduct(orderQuantityModel, {success ->
                     mHandler.post {
                         singleProductProgress.visibility = View.GONE
                     }
@@ -191,6 +184,8 @@ class SingleProductFragment : Fragment() {
                     mHandler.post {
                         singleProductProgress.visibility = View.GONE
                     }
+
+
                 })
         }
 
@@ -199,8 +194,7 @@ class SingleProductFragment : Fragment() {
          */
         addProduct.setOnClickListener {
             singleProductProgress.visibility = View.VISIBLE
-            Log.d("id+coffeeId:", "id: $id coffeeId: $coffeeId")
-                singleViewModel.increaseProduct(orderQuantityModel, token!!, {success ->
+                singleViewModel.increaseProduct(orderQuantityModel,  {success ->
                     mHandler.post {
                         singleProductProgress.visibility = View.GONE
                     }
@@ -208,6 +202,9 @@ class SingleProductFragment : Fragment() {
                     mHandler.post {
                         singleProductProgress.visibility = View.GONE
                     }
+                    Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+
+
                 })
         }
 
@@ -217,7 +214,7 @@ class SingleProductFragment : Fragment() {
         addFav.setOnClickListener {
             singleProductProgress.visibility = View.VISIBLE
 
-            singleViewModel.addFavorite(coffeeId,token!!,{success ->
+            singleViewModel.addFavorite(coffeeId,{success ->
                 mHandler.post {
                     singleProductProgress.visibility = View.GONE
                 }
@@ -226,6 +223,8 @@ class SingleProductFragment : Fragment() {
                 mHandler.post {
                     singleProductProgress.visibility = View.GONE
                 }
+                Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+
             })
         }
 
@@ -235,7 +234,7 @@ class SingleProductFragment : Fragment() {
         removeFav.setOnClickListener {
             singleProductProgress.visibility = View.VISIBLE
 
-            singleViewModel.deleteFavorite(coffeeId,token!!,{success ->
+            singleViewModel.deleteFavorite(coffeeId,{success ->
                 mHandler.post {
                     singleProductProgress.visibility = View.GONE
                 }
@@ -243,6 +242,9 @@ class SingleProductFragment : Fragment() {
                 mHandler.post {
                     singleProductProgress.visibility = View.GONE
                 }
+                Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+
+
             })
         }
 

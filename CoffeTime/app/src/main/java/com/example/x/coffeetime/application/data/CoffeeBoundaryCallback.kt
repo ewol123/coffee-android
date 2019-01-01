@@ -3,7 +3,6 @@ package com.example.x.coffeetime.application.data
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PagedList
-import android.util.Log
 import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.db.CoffeeLocalCache
@@ -29,12 +28,10 @@ class CoffeeBoundaryCallback(
 
 
     override fun onZeroItemsLoaded() {
-        Log.d("onZeroItemsLoaded", "onZeroItemsLoaded")
         requestAndSaveData(query)
     }
 
     override fun onItemAtEndLoaded(itemAtEnd: Coffee) {
-        Log.d("onItemAtEndLoaded", itemAtEnd.toString())
         requestAndSaveData(query)
     }
 

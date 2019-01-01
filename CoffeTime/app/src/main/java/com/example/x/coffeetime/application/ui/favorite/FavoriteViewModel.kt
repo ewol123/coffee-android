@@ -2,7 +2,6 @@ package com.example.x.coffeetime.application.ui.favorite
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel;
-import android.util.Log
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.FavoriteRepository
@@ -12,54 +11,36 @@ class FavoriteViewModel(private val favoriteRepo: FavoriteRepository,
                         private val cartRepo: CartRepository) : ViewModel() {
 
 
-    fun initFavorites(token : String){
 
-        favoriteRepo.getFavorites({ success ->
-            Log.d("CART_SUCCESS", success)
-        }, {error ->
-            Log.d("CART_ERROR", error)
-        },token)
-    }
-
-    fun addFavorite(id:Int, token: String,
-                        onSuccess: (success: String) -> Unit,
-                        onError: (error: String) -> Unit){
-        favoriteRepo.addFavorite({ success ->
-            onSuccess(success)
-        },{error ->
-            onError(error)
-        },id,token)
-    }
-
-    fun deleteFavorite(id:Int, token: String,
-                        onSuccess: (success: String) -> Unit,
-                        onError: (error: String) -> Unit){
+    fun deleteFavorite(id:Int,
+                       onSuccess: (success: String) -> Unit,
+                       onError: (error: String) -> Unit){
         favoriteRepo.deleteFavorite({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },id,token)
+        },id)
     }
 
 
-    fun increaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+    fun increaseProduct(orderQuantityModel: OrderQuantityModel,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit ){
         cartRepo.increaseProduct({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },orderQuantityModel,token)
+        },orderQuantityModel)
     }
 
-    fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+    fun decreaseProduct(orderQuantityModel: OrderQuantityModel,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit){
         cartRepo.decreaseProduct({ success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },orderQuantityModel,token)
+        },orderQuantityModel)
     }
 
 

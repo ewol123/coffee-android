@@ -1,6 +1,7 @@
 package com.example.x.coffeetime.application.ui.product
 
 import android.Manifest
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.paging.PagedList
@@ -11,7 +12,6 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
@@ -67,17 +67,12 @@ class ProductFragment : Fragment() {
     private fun observeToken(barcode: String?){
         productViewModel.token.observe(this, Observer { token ->
             if(token!!.isEmpty()){
-
-                findNavController().navigate(R.id.action_menu_to_login,null)
-
+                createDialog()?.show()
             } else if(token.isNotEmpty()) {
 
-                saveToken(token.get(0).token)
-                productViewModel.initFavorites(token.get(0).token)
-                productViewModel.getCart(token[0].token)
 
-                Log.d("ez a token", token[0].token)
-
+                productViewModel.initFavorites()
+                productViewModel.getCart()
 
                 if(barcode != "coffeeshop123") {
                     if (validateBarcode(barcode!!)) {
@@ -94,7 +89,7 @@ class ProductFragment : Fragment() {
                         productViewModel.searchCoffee(query)
 
 
-                        initAdapter(barcode, token[0].token)
+                        initAdapter(barcode)
                         observeCoffees()
                         observeCart(adapter)
                         initSearch(adapter)
@@ -116,6 +111,25 @@ class ProductFragment : Fragment() {
     }
 
     /*
+     * Alert dialog létrehozása
+     */
+
+    private fun createDialog(): AlertDialog? {
+         val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+             builder.setMessage("In order to use this application you need to login, proceed to login?")
+             builder.setCancelable(false)
+             builder.apply {
+                setPositiveButton("OK"
+                ) { _,_->
+                    findNavController().navigate(R.id.action_menu_to_login,null)
+                }
+            }
+            builder.create()
+        }
+        return alertDialog
+    }
+    /*
      * Kosár figyelése
      */
     private fun observeCart(adapter: ProductAdapter){
@@ -125,17 +139,6 @@ class ProductFragment : Fragment() {
         })
     }
 
-
-    /*
-     * JWT Token elmentése
-     */
-    private fun saveToken(token: String){
-        val tokenPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        tokenPref
-                ?.edit()
-                ?.putString(getString(R.string.preference_token_key), token )
-                ?.apply()
-    }
 
     /*
      * Vonalkód érvényességének egyszerű ellenőrzése
@@ -155,9 +158,8 @@ class ProductFragment : Fragment() {
     /*
      * Adapter beállítása
      */
-    private fun initAdapter(barcode: String?,token:String?) {
+    private fun initAdapter(barcode: String?) {
          adapter = ProductAdapter({ coffee ->
-            Log.i("Coffee:", "$coffee clicked")
 
             val bundle = Bundle()
             bundle.putInt("coffeeId", coffee.coffeeId)
@@ -168,7 +170,7 @@ class ProductFragment : Fragment() {
         }, {id ->
             productProgress.visibility = View.VISIBLE
 
-            productViewModel.increaseProduct(provideOrderQuantity(barcode,id.toString()),token!!, {success ->
+            productViewModel.increaseProduct(provideOrderQuantity(barcode,id.toString()), {success ->
                 mHandler.post {
                     productProgress.visibility = View.GONE
                 }
@@ -176,11 +178,13 @@ class ProductFragment : Fragment() {
                 mHandler.post {
                     productProgress.visibility = View.GONE
                 }
+                Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+
             })
         }, {id ->
             productProgress.visibility = View.VISIBLE
 
-            productViewModel.decreaseProduct(provideOrderQuantity(barcode,id.toString()),token!!, {success ->
+            productViewModel.decreaseProduct(provideOrderQuantity(barcode,id.toString()), {success ->
                 mHandler.post {
                     productProgress.visibility = View.GONE
                 }
@@ -190,7 +194,6 @@ class ProductFragment : Fragment() {
                 mHandler.post {
                     productProgress.visibility = View.GONE
                 }
-
             })
         })
         list.adapter = adapter
@@ -203,7 +206,6 @@ class ProductFragment : Fragment() {
      */
     private fun observeCoffees(){
         productViewModel.coffees.observe(this, Observer<PagedList<Coffee>> {
-            Log.d("Activity", "list: ${it?.size}")
             showEmptyList(it?.size == 0)
             adapter.submitList(it)
 
@@ -271,7 +273,6 @@ class ProductFragment : Fragment() {
                 Manifest.permission.CAMERA)
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            Log.i("permission", "Permission to record denied")
             makeRequest()
         }
         else {
@@ -298,11 +299,9 @@ class ProductFragment : Fragment() {
 
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
 
-                    Log.i("permission", "Permission has been denied by user")
                     Toast.makeText(context,"You can't use the app without camera permission, sorry :(", Toast.LENGTH_SHORT)
                             .show()
                 } else {
-                    Log.i("permission", "Permission has been granted by user")
                     findNavController().navigate(R.id.action_menu_to_Camera)
                 }
             }

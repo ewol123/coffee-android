@@ -6,127 +6,106 @@
     android:layout_height="match_parent">
 
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBar"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/imageLayout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
 
-            <android.support.constraint.Guideline
-                android:id="@+id/coffeeDataGuideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.24" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/imageLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <android.support.constraint.Guideline
-                android:id="@+id/verticalGuide"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.50" />
+                <ImageView
+                    android:id="@+id/coffeeImage"
+                    android:layout_width="385dp"
+                    android:layout_height="250dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic[0]" />
 
-            <ImageView
-                android:id="@+id/coffeeImage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="5dp"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/verticalGuide"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                tools:srcCompat="@tools:sample/backgrounds/scenic[0]" />
+                <ImageButton
+                    android:id="@+id/addFav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_star_border_orange_40dp" />
 
-            <ImageButton
-                android:id="@+id/addFav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@null"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_star_border_orange_40dp" />
-
-            <ImageButton
-                android:id="@+id/removeFav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@null"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_star_orange_filled_40dp" />
+                <ImageButton
+                    android:id="@+id/removeFav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"
+                    android:background="@null"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_star_orange_filled_40dp" />
 
 
-            <TextView
-                android:id="@+id/coffeeName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                android:textColor="@android:color/white"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/coffeeImage"
-                app:layout_constraintEnd_toEndOf="@+id/coffeeImage"
-                app:layout_constraintStart_toStartOf="@+id/coffeeImage" />
+
+                <TextView
+                    android:id="@+id/coffeeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="18dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/coffeeImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
 
             <TextView
                 android:id="@+id/coffeeDescription"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/verticalGuide"
-                app:layout_constraintTop_toTopOf="@+id/coffeeDataGuideline" />
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="8dp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="84dp"
-                android:layout_height="31dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:text="@string/strength_text"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/coffeeDescription"
-                app:layout_constraintStart_toStartOf="@+id/coffeeDescription"
-                app:layout_constraintTop_toBottomOf="@+id/coffeeDescription" />
-
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/coffeeBeanLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="63dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@+id/coffeeDescription"
-                app:layout_constraintStart_toStartOf="@+id/coffeeDescription"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"></LinearLayout>
+                android:orientation="horizontal"></LinearLayout>
 
 
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
 
-
-    </LinearLayout>
+    </ScrollView>
 
 
     <android.support.v7.widget.CardView

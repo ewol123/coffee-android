@@ -20,46 +20,46 @@ class SingleProductViewModel(private val coffeeRepo: CoffeeRepository,
 
     var cart : LiveData<List<Cart>> = cartRepo.findOrders()
 
-    fun increaseProduct(orderQuantityModel: OrderQuantityModel,token: String,
+    fun increaseProduct(orderQuantityModel: OrderQuantityModel,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit){
         cartRepo.increaseProduct({success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },orderQuantityModel,token)
+        },orderQuantityModel)
     }
 
-    fun decreaseProduct(orderQuantityModel: OrderQuantityModel, token: String,
+    fun decreaseProduct(orderQuantityModel: OrderQuantityModel,
                         onSuccess: (success: String) -> Unit,
                         onError: (error: String) -> Unit ){
         cartRepo.decreaseProduct({success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },orderQuantityModel,token)
+        },orderQuantityModel)
     }
 
 
 
-    fun addFavorite(id:Int, token: String,
+    fun addFavorite(id:Int,
                     onSuccess: (success: String) -> Unit,
                     onError: (error: String) -> Unit){
         favoriteRepo.addFavorite({success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },id,token)
+        },id)
     }
 
-    fun deleteFavorite(id:Int, token: String,
+    fun deleteFavorite(id:Int,
                        onSuccess: (success: String) -> Unit,
                        onError: (error: String) -> Unit){
         favoriteRepo.deleteFavorite({success ->
             onSuccess(success)
         },{error ->
             onError(error)
-        },id,token)
+        },id)
     }
 
     val favorites = favoriteRepo.findFavorites()

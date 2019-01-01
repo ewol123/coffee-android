@@ -9,16 +9,15 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 
 import com.example.x.coffeetime.R
 import com.example.x.coffeetime.application.Injection
 import com.example.x.coffeetime.application.Injection.provideOrderQuantity
-import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import kotlinx.android.synthetic.main.cart_fragment.*
 
@@ -42,11 +41,9 @@ class CartFragment : Fragment() {
                 val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
                 val defaultValue = "coffeeshop123"
                 val barcode = sharedPref?.getString(getString(R.string.preference_file_key), defaultValue)
-                val token = sharedPref?.getString(getString(R.string.preference_token_key),defaultValue)
 
-                cartViewModel.initCart(token!!)
 
-                initAdapter(token,barcode)
+                initAdapter(barcode)
 
                 observeCart()
 
@@ -58,16 +55,15 @@ class CartFragment : Fragment() {
      /*
      *Adapter beállítása
      */
-    private fun initAdapter(token: String?, barcode:String?){
+    private fun initAdapter( barcode:String?){
          adapter = CartAdapter(arrayListOf(),{cart ->
             val bundle = Bundle()
             bundle.putInt("coffeeId", cart.coffeeId)
             findNavController().navigate(R.id.action_cart_to_SingleItem,bundle)
         },{id ->
-            Log.d("Add product", id.toString())
             cartProgress.visibility = View.VISIBLE
 
-            cartViewModel.increaseProduct(provideOrderQuantity(barcode,id.toString()),  token!!, {success ->
+            cartViewModel.increaseProduct(provideOrderQuantity(barcode,id.toString()),  {success ->
                 mHandler.post {
                     cartProgress.visibility = View.GONE
                 }
@@ -75,13 +71,14 @@ class CartFragment : Fragment() {
                 mHandler.post {
                     cartProgress.visibility = View.GONE
                 }
+                Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+
             })
 
         }, {id ->
-            Log.d("Remove product", id.toString())
             cartProgress.visibility = View.VISIBLE
 
-            cartViewModel.decreaseProduct(provideOrderQuantity(barcode,id.toString()), token!!, {success ->
+            cartViewModel.decreaseProduct(provideOrderQuantity(barcode,id.toString()),  {success ->
                 mHandler.post {
                     cartProgress.visibility = View.GONE
                 }
@@ -89,11 +86,13 @@ class CartFragment : Fragment() {
                 mHandler.post {
                     cartProgress.visibility = View.GONE
                 }
+
+
             })
 
         }, {id ->
             cartProgress.visibility = View.VISIBLE
-            cartViewModel.deleteProduct(id,token!!,{success ->
+            cartViewModel.deleteProduct(id,{success ->
                 mHandler.post{
                     cartProgress.visibility = View.GONE
                 }
@@ -101,6 +100,8 @@ class CartFragment : Fragment() {
                 mHandler.post{
                     cartProgress.visibility = View.GONE
                 }
+
+
             })
         } )
 

@@ -28,18 +28,13 @@ object Injection {
                 Quantity = "1",
                 ProductId = id!!)
     }
-
-    private fun provideContext(application: Application): Context {
-        return application
-    }
-
     private fun provideCoffeeCache(context: Context): CoffeeLocalCache {
         val database = AppDatabase.getInstance(context)
         return CoffeeLocalCache(database.coffeeDao(), Executors.newSingleThreadExecutor())
     }
 
     private fun provideCoffeeRepository(context: Context): CoffeeRepository {
-        return CoffeeRepository(MainService.create(), provideCoffeeCache(context))
+        return CoffeeRepository(MainService.create(context), provideCoffeeCache(context))
     }
 
     private fun provideCartCache(context: Context): CartLocalCache {
@@ -47,12 +42,12 @@ object Injection {
         return CartLocalCache(database.cartDao(),Executors.newSingleThreadExecutor())
     }
     private fun provideCartRepository(context: Context): CartRepository{
-        return CartRepository(MainService.create(), ApiService(), provideCartCache(context))
+        return CartRepository(MainService.create(context), ApiService(), provideCartCache(context))
     }
 
-     private fun provideAuthRepository(): AuthRepository{
-        val database = AppDatabase.getInstance(provideContext(Application()))
-        return AuthRepository(ApiService(), MainService.create(),database.tokenDao(), Executors.newSingleThreadExecutor())
+     private fun provideAuthRepository(context: Context): AuthRepository{
+        val database = AppDatabase.getInstance(context)
+        return AuthRepository(ApiService(), MainService.create(context),database.tokenDao(), Executors.newSingleThreadExecutor())
     }
 
     private fun provideFavoriteCache(context:Context): FavoriteLocalCache {
@@ -60,14 +55,14 @@ object Injection {
         return FavoriteLocalCache(database.favoriteDao(),Executors.newSingleThreadExecutor())
     }
     private fun provideFavoriteRepository(context: Context): FavoriteRepository{
-        return FavoriteRepository(MainService.create(), ApiService(),provideFavoriteCache(context))
+        return FavoriteRepository(MainService.create(context), ApiService(),provideFavoriteCache(context))
     }
 
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
         return ViewModelFactory(
                 provideCoffeeRepository(context),
                 provideCartRepository(context),
-                provideAuthRepository(),
+                provideAuthRepository(context),
                 provideFavoriteRepository(context))
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,6 @@ class RegisterFragment : Fragment() {
 
 
         regGoBack?.setOnClickListener {
-            Toast.makeText(context,"Clicked the back button",Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_register_to_Login)
         }
 
@@ -68,7 +66,8 @@ class RegisterFragment : Fragment() {
                     mHandler.post {
                         registerProgressBar.visibility = View.GONE
                     }
-                    Log.d("error","error placeholder")
+                    Toast.makeText(context,error, Toast.LENGTH_SHORT).show()
+
                 }) }
         }
     }

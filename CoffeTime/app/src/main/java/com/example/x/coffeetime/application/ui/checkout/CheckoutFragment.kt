@@ -51,9 +51,6 @@ class CheckoutFragment : Fragment() {
         checkoutViewModel = ViewModelProviders.of(this,
                 Injection.provideViewModelFactory(context!!)).get(CheckoutViewModel::class.java)
 
-        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val defaultValue = "coffeeshop123"
-        val token = sharedPref?.getString(getString(R.string.preference_token_key), defaultValue)
         mBraintreeFragment = BraintreeFragment.newInstance(activity, "sandbox_dw398mmw_czrg5hprsvbkxws3")
 
         setPaypalText()
@@ -62,9 +59,9 @@ class CheckoutFragment : Fragment() {
 
         observeCart()
 
-        setCashPayClickListener(token)
+        setCashPayClickListener()
 
-        setPaypalPayClickListener(token)
+        setPaypalPayClickListener()
 
     }
 
@@ -112,7 +109,7 @@ class CheckoutFragment : Fragment() {
      /*
      * Készpénzes fizetés gomb click esemény figyelése
      */
-    private fun setCashPayClickListener(token: String?){
+    private fun setCashPayClickListener(){
         payCashBtn.setOnClickListener {
             checkoutProgress.visibility = View.VISIBLE
             checkoutViewModel.updateOrder({success ->
@@ -126,7 +123,7 @@ class CheckoutFragment : Fragment() {
                 mHandler.post {
                     checkoutProgress.visibility = View.GONE
                 }
-            },"cash",token!!)
+            },"cash")
 
         }
     }
@@ -134,7 +131,7 @@ class CheckoutFragment : Fragment() {
     /*
    * Paypalos fizetés gomb click esemény figyelése, a visszakapott eredmény figyelésével
    */
-    private fun setPaypalPayClickListener(token: String?){
+    private fun setPaypalPayClickListener(){
         payPaypalBtn.setOnClickListener {
             val request = PayPalRequest(totalPrice.toString())
                     .currencyCode("USD")
@@ -161,7 +158,7 @@ class CheckoutFragment : Fragment() {
                     }
 
 
-                },"online",token!!)
+                },"online")
             }
 
         })

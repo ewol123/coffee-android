@@ -3,7 +3,6 @@ package com.example.x.coffeetime.application.ui.product
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.ViewGroup
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Coffee
@@ -64,7 +63,6 @@ class ProductAdapter(val listener: (Coffee) -> Unit,
 
     fun setCart(list: List<Cart>){
         cart = list
-        Log.d("LIST:",cart.toString())
         notifyDataSetChanged()
     }
 
