@@ -14,6 +14,7 @@ import java.util.concurrent.Executor
 class AuthRepository(
         private val ApiService: ApiService,
         private val mainService: MainService,
+        private val authService: MainService,
         private val tokenDao: TokenDao,
         private val ioExecutor: Executor
 ) {
@@ -27,10 +28,10 @@ class AuthRepository(
      fun login(username: String,password : String, context: Context?,  onSuccess: (success: String) -> Unit,
                onError: (error: String) -> Unit) {
 
-        ApiService.requestAuth( mainService, username, password, { token ->
+        ApiService.requestAuth( authService, username, password, { token, refresh_token ->
             ioExecutor.execute {
             tokenDao.deleteAll()
-            var newToken = Token(token)
+            var newToken = Token(token, refresh_token)
             tokenDao.insert(newToken)
             }
             onSuccess("success")

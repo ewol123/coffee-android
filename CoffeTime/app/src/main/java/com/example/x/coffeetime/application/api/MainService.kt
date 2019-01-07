@@ -1,11 +1,11 @@
 package com.example.x.coffeetime.application.api
 
 import android.content.Context
+import android.util.Log
 import com.example.x.coffeetime.application.api.BindingModel.CreateUserModel
 import com.example.x.coffeetime.application.api.ResponseModel.TokenResponse
 import com.example.x.coffeetime.application.db.AppDatabase
 import com.example.x.coffeetime.application.model.Coffee
-import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,7 +16,9 @@ import retrofit2.http.*
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.model.Cart
 import com.example.x.coffeetime.application.model.Favorite
-
+import com.example.x.coffeetime.application.model.Token
+import okhttp3.*
+import retrofit2.http.Headers
 
 
 private const val TAG = "MainService"
@@ -30,7 +32,7 @@ class ApiService {
             service: MainService,
             username: String,
             password: String,
-            onSuccess: (token: String) -> Unit,
+            onSuccess: (token: String, refresh_token: String) -> Unit,
             onError: (error: String) -> Unit) {
 
 
@@ -47,7 +49,8 @@ class ApiService {
                         if (response.isSuccessful) {
 
                             val token = response.body()?.token ?: ""
-                            onSuccess(token)
+                            val refresh_token = response.body()?.refresh_token ?: ""
+                            onSuccess(token, refresh_token)
                         } else {
 
                             onError("Wrong credentials, please try again")
@@ -56,6 +59,46 @@ class ApiService {
                 }
         )
     }
+
+    fun refreshToken(
+            service: MainService,
+            refreshToken: String,
+            onSuccess: (token: String, refresh_token: String) -> Unit,
+            onError: (error: String) -> Unit) {
+
+
+        service.refreshToken(refreshToken, "refresh_token", CLIENT_ID).enqueue(
+                object : Callback<TokenResponse> {
+                    override fun onFailure(call: Call<TokenResponse>?, t: Throwable) {
+                        onError(ERR_MSG)
+                    }
+
+                    override fun onResponse(
+                            call: Call<TokenResponse>?,
+                            response: Response<TokenResponse>
+                    ) {
+                        if (response.isSuccessful) {
+
+                            val token = response.body()?.token ?: ""
+                            val refresh_token = response.body()?.refresh_token ?: ""
+                            onSuccess(token, refresh_token)
+                        } else {
+
+                            onError("Wrong credentials, please try again")
+                        }
+                    }
+                }
+        )
+    }
+
+    fun refreshTokenSync(
+            service: MainService,
+            refreshToken: String?) : TokenResponse?
+    {
+        var res = service.refreshToken(refreshToken, "refresh_token", CLIENT_ID).execute()
+        return res.body()
+
+        }
 
     fun register(
             service: MainService,
@@ -403,7 +446,15 @@ interface MainService {
             @Field("grant_type") grant_type: String,
             @Field("client_id") client_id: String): Call<TokenResponse>
 
-    @POST("/api/accounts/create")
+
+    @FormUrlEncoded
+    @POST("/oauth2/token")
+    fun refreshToken(
+            @Field("refresh_token") refresh_token: String?,
+            @Field("grant_type") grant_type: String,
+            @Field("client_id") client_id: String): Call<TokenResponse>
+
+    @POST("/api/accounts/createResObject")
     fun register(
             @Body createUserModel : CreateUserModel): Call<Void>
 
@@ -475,22 +526,53 @@ interface MainService {
 
 
     companion object {
-        private const val BASE_URL ="http://192.168.1.104:5819"
+        private const val RES_BASE_URL ="http://192.168.1.104:5819"
+        private const val AUTH_BASE_URL = "http://192.168.1.104:5821"
 
-        fun create(context: Context): MainService {
+        fun createResObject(context: Context): MainService {
             var token: String? = null
-
+            var refreshToken: String? = null
             AppDatabase.getInstance(context).tokenDao().getToken().observeForever {
-              if(it!!.isNotEmpty()) {
-                  token = it.get(0).token
-              }
-              }
-
+                if(it!!.isNotEmpty()) {
+                    token = it.get(0).token
+                    refreshToken = it.get(0).refresh_token
+                    Log.d("refreshToken", refreshToken)
+                }
+            }
             val logger = HttpLoggingInterceptor()
             logger.level = HttpLoggingInterceptor.Level.BASIC
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(logger)
+                    .authenticator(Authenticator( fun (route: Route?, response: okhttp3.Response): Request? {
+                        if (response.code() == 401) {
+
+                            if(refreshToken == null){
+                                Log.d("AUTHENTICATOR", "refresh token null")
+                                return null
+                            }
+                            val res = ApiService()
+                                    .refreshTokenSync(MainService.createAuthObject(), refreshToken)
+
+
+                            if (res != null) {
+
+                                var db = AppDatabase.getInstance(context)
+                                db.tokenDao().deleteAll()
+                                db.tokenDao().insert(Token(res.token, res.refresh_token))
+                                return response.request().newBuilder()
+                                        .header("Authorization", "Bearer ${res.token}")
+                                        .build()
+                            } else {
+                                Log.d("AUTHENTICATOR","response null")
+                                return null
+                            }
+                        }
+                        else {
+                            Log.d("AUTHENTICATOR","not 401 error")
+                            return null
+                        }
+                    }))
                     .addInterceptor { chain ->
                         val original = chain.request()
                         val request = original.newBuilder()
@@ -504,7 +586,24 @@ interface MainService {
                     .build()
 
             return Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(RES_BASE_URL)
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+                    .create(MainService::class.java)
+        }
+
+        fun createAuthObject(): MainService {
+
+            val logger = HttpLoggingInterceptor()
+            logger.level = HttpLoggingInterceptor.Level.BASIC
+
+            val client = OkHttpClient.Builder()
+                    .addInterceptor(logger)
+                    .build()
+
+            return Retrofit.Builder()
+                    .baseUrl(AUTH_BASE_URL)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()

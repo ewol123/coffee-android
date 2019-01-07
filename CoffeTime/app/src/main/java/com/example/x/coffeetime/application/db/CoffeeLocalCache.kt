@@ -17,7 +17,6 @@ class CoffeeLocalCache(
 
     fun insert(coffees: List<Coffee>, insertFinished: ()-> Unit) {
         ioExecutor.execute {
-            Log.d("CoffeeLocalCache", "inserting ${coffees.size} coffees")
             coffeeDao.insert(coffees)
             insertFinished()
         }

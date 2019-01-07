@@ -1,6 +1,5 @@
 package com.example.x.coffeetime.application
 
-import android.app.Application
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import com.example.x.coffeetime.application.api.ApiService
@@ -34,7 +33,7 @@ object Injection {
     }
 
     private fun provideCoffeeRepository(context: Context): CoffeeRepository {
-        return CoffeeRepository(MainService.create(context), provideCoffeeCache(context))
+        return CoffeeRepository(MainService.createResObject(context), provideCoffeeCache(context))
     }
 
     private fun provideCartCache(context: Context): CartLocalCache {
@@ -42,12 +41,16 @@ object Injection {
         return CartLocalCache(database.cartDao(),Executors.newSingleThreadExecutor())
     }
     private fun provideCartRepository(context: Context): CartRepository{
-        return CartRepository(MainService.create(context), ApiService(), provideCartCache(context))
+        return CartRepository(MainService.createResObject(context),
+                ApiService(), provideCartCache(context))
     }
 
      private fun provideAuthRepository(context: Context): AuthRepository{
         val database = AppDatabase.getInstance(context)
-        return AuthRepository(ApiService(), MainService.create(context),database.tokenDao(), Executors.newSingleThreadExecutor())
+        return AuthRepository(ApiService(),
+                MainService.createResObject(context),
+                MainService.createAuthObject(),database.tokenDao(),
+                Executors.newSingleThreadExecutor())
     }
 
     private fun provideFavoriteCache(context:Context): FavoriteLocalCache {
@@ -55,7 +58,8 @@ object Injection {
         return FavoriteLocalCache(database.favoriteDao(),Executors.newSingleThreadExecutor())
     }
     private fun provideFavoriteRepository(context: Context): FavoriteRepository{
-        return FavoriteRepository(MainService.create(context), ApiService(),provideFavoriteCache(context))
+        return FavoriteRepository(MainService.createResObject(context),
+                ApiService(),provideFavoriteCache(context))
     }
 
     fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
