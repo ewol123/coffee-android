@@ -43,7 +43,7 @@ class FavoriteAdapter(
         Picasso.get()
                 .load(imagePath)
                 .transform(RoundedCornersTransformation(20,5))
-                .resize(150,150).into(holder!!.mImage)
+                .resize(150,150).into(holder.mImage)
 
 
         holder.mCoffeeName.text = name

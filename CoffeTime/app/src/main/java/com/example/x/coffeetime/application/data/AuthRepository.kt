@@ -2,7 +2,6 @@ package com.example.x.coffeetime.application.data
 
 import android.arch.lifecycle.LiveData
 import android.content.Context
-import android.widget.Toast
 import com.example.x.coffeetime.application.api.MainService
 import com.example.x.coffeetime.application.api.ApiService
 import com.example.x.coffeetime.application.api.BindingModel.CreateUserModel
@@ -36,8 +35,7 @@ class AuthRepository(
             }
             onSuccess("success")
         }, { error ->
-            Toast.makeText(context,error,Toast.LENGTH_SHORT).show()
-            onError("error")
+            onError(error)
         })
 
     }
@@ -47,11 +45,9 @@ class AuthRepository(
                  onError: (error: String) -> Unit){
 
         ApiService.register(mainService,createUserModel, { success ->
-            Toast.makeText(context,"Register successful, please log-in",Toast.LENGTH_SHORT).show()
-            onSuccess("success")
+            onSuccess("Register successful, please log-in")
         }, {error ->
-            onError("error")
-            Toast.makeText(context,error,Toast.LENGTH_SHORT).show()
+            onError(error)
         })
     }
 

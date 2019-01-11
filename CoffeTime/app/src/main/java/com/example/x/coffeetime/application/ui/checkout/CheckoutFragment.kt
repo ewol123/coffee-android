@@ -139,7 +139,7 @@ class CheckoutFragment : Fragment() {
             PayPal.requestOneTimePayment(mBraintreeFragment, request)
         }
 
-        mBraintreeFragment?.addListener(PaymentMethodNonceCreatedListener {
+        mBraintreeFragment.addListener(PaymentMethodNonceCreatedListener {
             val nonce = it.nonce
             if (it is PayPalAccountNonce) {
                 Log.d("nonce", nonce)

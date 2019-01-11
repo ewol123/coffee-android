@@ -39,7 +39,7 @@ class ApiService {
         service.requestAuth(username, password, "password", CLIENT_ID).enqueue(
                 object : Callback<TokenResponse> {
                     override fun onFailure(call: Call<TokenResponse>?, t: Throwable) {
-                        onError(ERR_MSG)
+                        onError("Failed to connect")
                     }
 
                     override fun onResponse(
@@ -115,7 +115,7 @@ class ApiService {
         service.register(createuserModel).enqueue(
                 object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
-                        onError(ERR_MSG)
+                        onError("Register failed, please try again")
 
                     }
 
@@ -207,7 +207,7 @@ class ApiService {
         service.sendPasswordReset(email).enqueue(
                 object : Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
-                        onError(ERR_MSG)
+                        onError("Failed to connect, please try again")
 
                     }
 
@@ -234,7 +234,7 @@ class ApiService {
         service.provideToken(token, email, newPass).enqueue(
                 object : Callback<String> {
                     override fun onFailure(call: Call<String>, t: Throwable) {
-                        onError(ERR_MSG)
+                        onError("Failed to connect, please try again")
 
                     }
 

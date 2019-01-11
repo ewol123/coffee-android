@@ -12,7 +12,7 @@ class RegisterViewModel(private val authRepo: AuthRepository) : ViewModel() {
     fun register(createUserModel: CreateUserModel, context: Context?, onSuccess: (success: String) -> Unit,
                  onError: (error: String) -> Unit){
 
-        authRepo.register(createUserModel,context,{ success ->onSuccess("success")},{ error ->onError("error")})
+        authRepo.register(createUserModel,context,{ success ->onSuccess("Successful")},{ error ->onError(error)})
     }
 
     var validator: Validator = Validator()

@@ -39,7 +39,7 @@ class CheckoutAdapter(cart: List<Cart>) : RecyclerView.Adapter<CheckoutAdapter.R
         Picasso.get()
                 .load(imagePath)
                 .transform(RoundedCornersTransformation(20,5))
-                .resize(100,100).into(holder!!.mImage)
+                .resize(100,100).into(holder.mImage)
 
 
         holder.mCoffeeName.text = name

@@ -44,9 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
 
 
 
-        private class DatabaseCallback(
-
-        ) : RoomDatabase.Callback() {
+        private class DatabaseCallback : RoomDatabase.Callback() {
 
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)

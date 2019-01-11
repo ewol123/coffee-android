@@ -1,7 +1,7 @@
 package com.example.x.coffeetime.application.ui.favorite
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModel
 import com.example.x.coffeetime.application.api.BindingModel.OrderQuantityModel
 import com.example.x.coffeetime.application.data.CartRepository
 import com.example.x.coffeetime.application.data.FavoriteRepository

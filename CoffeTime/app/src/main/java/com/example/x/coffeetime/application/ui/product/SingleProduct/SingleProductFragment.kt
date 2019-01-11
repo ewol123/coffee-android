@@ -102,7 +102,7 @@ class SingleProductFragment : Fragment() {
                 addFav.visibility = View.VISIBLE
 
             }
-            else if(favorites!!.isNotEmpty()){
+            else if(favorites.isNotEmpty()){
                 var favoriteItem = favorites.find { favorite -> favorite.id == coffeeId }
 
                 if(favoriteItem != null){
