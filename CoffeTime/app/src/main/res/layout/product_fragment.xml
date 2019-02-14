@@ -73,6 +73,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:indeterminate="true"
+        android:translationZ="2dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
