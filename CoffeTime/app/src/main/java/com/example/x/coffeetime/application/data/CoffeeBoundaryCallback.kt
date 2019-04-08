@@ -15,7 +15,6 @@ class CoffeeBoundaryCallback(
         private val cache: CoffeeLocalCache
 ) : PagedList.BoundaryCallback<Coffee>() {
 
-
     private var lastRequestedPage = 1
     val apiService = ApiService()
     private val _networkErrors = MutableLiveData<String>()

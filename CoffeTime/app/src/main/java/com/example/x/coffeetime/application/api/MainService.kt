@@ -526,8 +526,8 @@ interface MainService {
 
 
     companion object {
-        private const val RES_BASE_URL ="http://192.168.1.100:5819"
-        private const val AUTH_BASE_URL = "http://192.168.1.100:5821"
+        private const val RES_BASE_URL ="http://192.168.1.101:5819"
+        private const val AUTH_BASE_URL = "http://192.168.1.101:5821"
 
         fun createResObject(context: Context): MainService {
             var token: String? = null

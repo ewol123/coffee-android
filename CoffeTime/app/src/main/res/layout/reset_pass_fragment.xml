@@ -52,15 +52,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sendCodeBtn" />
 
-    <ProgressBar
-        android:id="@+id/codeProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/resetToLoginBtn" />
+
 
 
     <EditText
@@ -156,10 +148,25 @@
         app:layout_constraintTop_toBottomOf="@+id/resetPassBtn" />
 
     <ProgressBar
-        android:id="@+id/resetProgressBar"
+        android:id="@+id/codeProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
+        android:visibility="gone"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ProgressBar
+        android:id="@+id/resetProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:translationZ="2dp"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
